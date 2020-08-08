@@ -7,6 +7,7 @@ import {createShowButtonMarkup} from "./view/show-button.js";
 import {createStatisticsMarkup} from "./view/statistics.js";
 import {createPopUpMarkup} from "./view/pop-up.js";
 import {generateFilms} from "./mock/film.js";
+import {generateFilters} from "./mock/filter.js";
 
 const FILM_CARDS_COUNT = 10;
 const FILM_EXTRA_COUNT = 2;
@@ -26,6 +27,7 @@ const getMostCommentedFilms = (films) => {
 const films = generateFilms(FILM_CARDS_COUNT);
 const topRatedFilms = getTopRatedFilms(films);
 const mostCommentedFilms = getMostCommentedFilms(films);
+const filters = generateFilters(films);
 
 const render = (container, markup, place = `beforeend`) => {
   container.insertAdjacentHTML(place, markup);
@@ -36,7 +38,7 @@ const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
 render(header, createProfileMarkup());
-render(main, createNavigationMarkup(), `afterbegin`);
+render(main, createNavigationMarkup(filters), `afterbegin`);
 render(main, createSortingMarkup());
 render(main, createFilmsMarkup());
 
@@ -65,5 +67,5 @@ render(filmsList, createShowButtonMarkup());
 const statistics = footer.querySelector(`.footer__statistics`);
 
 render (statistics, createStatisticsMarkup());
-render (footer, createPopUpMarkup(films[0]), `afterend`);
+// render (footer, createPopUpMarkup(films[0]), `afterend`);
 
