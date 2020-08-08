@@ -65,5 +65,5 @@ render(filmsList, createShowButtonMarkup());
 const statistics = footer.querySelector(`.footer__statistics`);
 
 render (statistics, createStatisticsMarkup());
-// render (footer, createPopUpMarkup(), `afterend`);
+render (footer, createPopUpMarkup(films[0]), `afterend`);
 

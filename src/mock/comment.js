@@ -1,33 +1,47 @@
 import {getRandomInteger, getRandomValue} from "../utils.js";
 
 const MAX_DAYS_GUP = 30;
+const MAX_HOURS = 23;
+const MAX_MINUTES = 59;
 
-const EMOJIS = [
+const emojis = [
   `./images/emoji/angry.png`,
   `./images/emoji/puke.png`,
   `./images/emoji/sleeping.png`,
   `./images/emoji/smile.png`
 ];
 
-const COMMENTS = [
+const comments = [
   `Interesting setting and a good cast`,
   `Booooooooooring`,
   `Very very old. Meh`,
   `Almost two hours? Seriously?`
 ];
 
+const names = [
+  `John`,
+  `Jimmy`,
+  `Cary`,
+  `Alfred`
+];
+
+const surnames = [
+  `Doe`,
+  `Stewart`,
+  `Grant`,
+  `Hitchcock`
+];
+
 const generateRandomName = () => {
-  const names = [`John`, `Jimmy`, `Cary`, `Alfred`];
-  const surnames = [`Doe`, `Stewart`, `Grant`, `Hitchcock`];
 
   return `${getRandomValue(names)} ${getRandomValue(surnames)}`;
 };
 
 const generateDate = () => {
-  const daysGap = getRandomInteger(-MAX_DAYS_GUP, MAX_DAYS_GUP);
+  const daysGap = getRandomInteger(-MAX_DAYS_GUP, 0);
   const currentDate = new Date();
 
-  currentDate.setHours(23, 59, 59, 999);
+  currentDate.setHours(getRandomInteger(0, MAX_HOURS), getRandomInteger(0, MAX_MINUTES));
   currentDate.setDate(currentDate.getDate() + daysGap);
 
   return currentDate;
@@ -35,8 +49,8 @@ const generateDate = () => {
 
 const generateComment = () => {
   return {
-    emoji: getRandomValue(EMOJIS),
-    text: getRandomValue(COMMENTS),
+    emoji: getRandomValue(emojis),
+    text: getRandomValue(comments),
     author: generateRandomName(),
     day: generateDate()
   };
