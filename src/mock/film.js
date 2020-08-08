@@ -24,6 +24,7 @@ const posters = [
 const genres = [`Musical`, ` Western`, ` Drama`, `Comedy`, `Cartoon`];
 
 const sourceText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
+const sourcePhrases = sourceText.split(`. `);
 
 const phrasesInDescription = {
   min: 1,
@@ -48,21 +49,29 @@ const filmDurationMax = {
 const filmGenresCount = {
   min: 1,
   max: 3
-}
+};
 
+const generateUniqueCompilation = (source, dictionary) => {
+  const {min, max} = dictionary;
+  const count = getRandomInteger(min, max);
+  const uniqueValues = new Set();
 
+  for (let i = 0; i < count; i++) {
+    uniqueValues.add(getRandomValue(source));
+  }
 
-
+  return Array.from(uniqueValues);
+};
 
 const generateRating = () => {
   const {min, max} = filmRating;
-  return getRandomInteger(min, max) / 10;
-}
+  return (getRandomInteger(min, max) / 10).toFixed(1);
+};
 
 const generateYear = () => {
   const {first, last} = filmYear;
   return getRandomInteger(first, last);
-}
+};
 
 const generateDuration = () => {
   const {hours, minutes} = filmDurationMax;
@@ -70,32 +79,7 @@ const generateDuration = () => {
   const minutesDuration = getRandomInteger(0, minutes);
 
   return `${hoursDuration > 0 ? `${hoursDuration}h` : ``} ${minutesDuration > 0 ? `${minutesDuration}m` : ``}`;
-}
-
-const generateGenres = () => {
-  const {min, max} = filmGenresCount;
-  const genresCount = getRandomInteger(min, max);
-  const randomGenres = new Set();
-
-  for (let i = 0; i < genresCount; i++) {
-    randomGenres.add(getRandomValue(genres));
-  }
-
-  return Array.from(randomGenres).join(`, `);
-}
-
-const generateDescription = (text) => {
-  const {min, max} = phrasesInDescription;
-  const phrasesCount = getRandomInteger(min, max);
-  const randomPhrases = new Set();
-
-  for (let i = 0; i < phrasesCount; i++) {
-    randomPhrases.add(getRandomValue(text.split(`. `)));
-  }
-
-  return Array.from(randomPhrases).join(`. `);
 };
-
 
 const generateFilm = () => {
   const commentsCount = getRandomInteger(0, MAX_COMMENTS);
@@ -105,13 +89,16 @@ const generateFilm = () => {
     rating: generateRating(),
     year: generateYear(),
     duration: generateDuration(),
-    genre: generateGenres(),
+    genres: generateUniqueCompilation(genres, filmGenresCount),
     poster: getRandomValue(posters),
-    description: generateDescription(sourceText),
-    comments: generateComments(commentsCount)
+    description: generateUniqueCompilation(sourcePhrases, phrasesInDescription),
+    comments: generateComments(commentsCount),
+    isWatchList: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorites: getRandomBoolean()
   };
-}
+};
 
 export const generateFilms = (count) => {
   return new Array(count).fill().map(generateFilm);
-}
+};

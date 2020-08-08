@@ -40,7 +40,7 @@ const generateComment = () => {
     author: generateRandomName(),
     day: generateDate()
   };
-}
+};
 
 export const generateComments = (count) => {
   return new Array(count).fill().map(generateComment);
