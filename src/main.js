@@ -12,6 +12,7 @@ import {generateProfile} from "./mock/profile.js";
 
 const FILM_CARDS_COUNT = 20;
 const FILM_EXTRA_COUNT = 2;
+const FILM_CARDS_PER_STEP = 5;
 
 const getTopRatedFilms = (films) => {
   return films.sort((a, b) => {
@@ -38,37 +39,58 @@ const render = (container, markup, place = `beforeend`) => {
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
-const footer = document.querySelector(`.footer`);
 
 render(header, createProfileMarkup(profile));
 render(main, createNavigationMarkup(filters), `afterbegin`);
 render(main, createSortingMarkup());
-render(main, createFilmsMarkup());
+render(main, createFilmsMarkup(films));
 
 const filmsSection = main.querySelector(`.films`);
 const filmsList = filmsSection.querySelector(`.films-list`);
 const filmsContainers = filmsSection.querySelectorAll(`.films-list__container`);
 
-const renderFilmCard = (count, container, films) => {
+const renderFilmCard = (container, film) => {
+  render(container, createFilmCardMarkup(film));
+}
+
+const renderCards = (count, container, films) => {
   for (let i = 0; i < count; i++) {
-    render(container, createFilmCardMarkup(films[i]));
+    renderFilmCard(container, films[i])
   }
 }
 
 Array.from(filmsContainers).forEach((item) => {
   if (item.parentElement.children[0].textContent === `Top rated`) {
-    renderFilmCard(FILM_EXTRA_COUNT, item, topRatedFilms);
+    renderCards(FILM_EXTRA_COUNT, item, topRatedFilms);
   } else if (item.parentElement.children[0].textContent === `Most commented`) {
-    renderFilmCard(FILM_EXTRA_COUNT, item, mostCommentedFilms);
+    renderCards(FILM_EXTRA_COUNT, item, mostCommentedFilms);
   } else {
-    renderFilmCard(FILM_CARDS_COUNT, item, films);
+    renderCards(Math.min(films.length, FILM_CARDS_PER_STEP), item, films);
+
+    if (films.length > FILM_CARDS_PER_STEP) {
+      let renderedFilmsCount = FILM_CARDS_PER_STEP;
+      render(filmsList, createShowButtonMarkup());
+
+      const showMoreButton = filmsList.querySelector(`.films-list__show-more`);
+
+      const onShowMoreButtonClick = (evt) => {
+        evt.preventDefault();
+        films.slice(renderedFilmsCount, renderedFilmsCount + FILM_CARDS_PER_STEP).forEach((film) => renderFilmCard(item, film));
+
+        renderedFilmsCount += FILM_CARDS_PER_STEP;
+
+        if (renderedFilmsCount >= films.length) {
+          showMoreButton.remove();
+        }
+      }
+
+      showMoreButton.addEventListener(`click`, onShowMoreButtonClick);
+    };
   }
 });
 
-render(filmsList, createShowButtonMarkup());
-
+const footer = document.querySelector(`.footer`);
 const statistics = footer.querySelector(`.footer__statistics`);
 
 render (statistics, createStatisticsMarkup(total));
-// render (footer, createPopUpMarkup(films[0]), `afterend`);
-
+render (footer, createPopUpMarkup(films[0]), `afterend`);

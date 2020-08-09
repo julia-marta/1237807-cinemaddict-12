@@ -3,6 +3,14 @@ const addFilteredFilmsCount = (filter, check) => {
 };
 
 export const generateFilters = (films) => {
+  if (films.length === 0) {
+    return {
+      watchlist: 0,
+      history: 0,
+      favorites: 0
+    };
+  }
+
   return films.reduce((filter, film) => {
     filter.watchlist = addFilteredFilmsCount(filter.watchlist, film.isWatchList);
     filter.history = addFilteredFilmsCount(filter.history, film.isWatched);
