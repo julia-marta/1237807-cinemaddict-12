@@ -81,25 +81,13 @@ const filmRating = {
 };
 
 const filmDate = {
-  day: {
-    first: 1,
-    shortlast: 28,
-    evenlast: 30,
-    last: 31,
-  },
-  month: {
-    first: 0,
-    last: 11
-  },
-  year: {
-    first: 1895,
-    last: new Date().getFullYear()
-  }
+  first: new Date(1895, 0, 1),
+  last: new Date()
 };
 
-const filmDurationMax = {
-  hours: 4,
-  minutes: 60
+const filmDurationInMinutes = {
+  min: 5,
+  max: 240
 };
 
 const filmWritersCount = {
@@ -135,34 +123,20 @@ const generateRating = () => {
 };
 
 const generateDate = () => {
-  const {day, month, year} = filmDate;
+  const {first, last} = filmDate;
+  const minTimestamp = first - new Date(0);
+  const maxTimestamp = last - new Date(0);
+  const randomTimestamp = getRandomInteger(minTimestamp, maxTimestamp);
 
-  const randomYear = getRandomInteger(year.first, year.last);
-  const randomMonth = getRandomInteger(month.first, month.last);
-  let randomDate;
-
-  switch (randomMonth) {
-    case 1:
-      randomDate = getRandomInteger(day.first, day.shortlast);
-      break;
-    case (3 || 5 || 8 || 10):
-      randomDate = getRandomInteger(day.first, day.evenlast);
-      break;
-    default:
-      randomDate = getRandomInteger(day.first, day.last);
-  }
-
-  const date = new Date(randomYear, randomMonth, randomDate);
-
+  const date = new Date(randomTimestamp);
   return date;
 };
 
 const generateDuration = () => {
-  const {hours, minutes} = filmDurationMax;
-  const hoursDuration = getRandomInteger(0, hours);
-  const minutesDuration = getRandomInteger(0, minutes);
+  const {min, max} = filmDurationInMinutes;
+  const duration = getRandomInteger(min, max);
 
-  return `${hoursDuration > 0 ? `${hoursDuration}h` : ``} ${minutesDuration > 0 ? `${minutesDuration}m` : ``}`;
+  return duration;
 };
 
 const generateFilm = () => {
@@ -191,4 +165,16 @@ const generateFilm = () => {
 
 export const generateFilms = (count) => {
   return new Array(count).fill().map(generateFilm);
+};
+
+export const getTopRatedFilms = (films, count) => {
+  return films.sort((a, b) => {
+    return b.rating - a.rating;
+  }).slice(0, count);
+};
+
+export const getMostCommentedFilms = (films, count) => {
+  return films.sort((a, b) => {
+    return b.comments.length - a.comments.length;
+  }).slice(0, count);
 };

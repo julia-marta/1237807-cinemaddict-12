@@ -2,10 +2,18 @@ import {getRandomInteger} from "../utils.js";
 
 const MAX_WATCHED_FILMS = 100;
 
+const rankSteps = {
+  low: 1,
+  middle: 10,
+  high: 20
+};
+
+const {low, middle, high} = rankSteps;
+
 const userRank = {
-  novice: (watched) => watched >= 1 && watched <= 10,
-  fan: (watched) => watched > 10 && watched <= 20,
-  moviebuff: (watched) => watched >= 21
+  novice: (watched) => watched >= low && watched <= middle,
+  fan: (watched) => watched > middle && watched <= high,
+  moviebuff: (watched) => watched > high
 };
 
 const getRank = (count) => {
