@@ -6,7 +6,7 @@ import {createFilmCardMarkup} from "./view/film-card.js";
 import {createShowButtonMarkup} from "./view/show-button.js";
 import {createStatisticsMarkup} from "./view/statistics.js";
 import {createPopUpMarkup} from "./view/pop-up.js";
-import {generateFilms} from "./mock/film.js";
+import {generateFilms, getTopRatedFilms, getMostCommentedFilms} from "./mock/film.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateProfile} from "./mock/profile.js";
 
@@ -14,21 +14,9 @@ const FILM_CARDS_COUNT = 20;
 const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
 
-const getTopRatedFilms = (films) => {
-  return films.sort((a, b) => {
-    return b.rating - a.rating;
-  }).slice(0, FILM_EXTRA_COUNT);
-}
-
-const getMostCommentedFilms = (films) => {
-  return films.sort((a, b) => {
-    return b.comments.length - a.comments.length;
-  }).slice(0, FILM_EXTRA_COUNT);
-}
-
 const films = generateFilms(FILM_CARDS_COUNT);
-const topRatedFilms = getTopRatedFilms(films);
-const mostCommentedFilms = getMostCommentedFilms(films);
+const topRatedFilms = getTopRatedFilms(films, FILM_EXTRA_COUNT);
+const mostCommentedFilms = getMostCommentedFilms(films, FILM_EXTRA_COUNT);
 const filters = generateFilters(films);
 const profile = generateProfile();
 const total = films.length;

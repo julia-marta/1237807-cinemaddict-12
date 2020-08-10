@@ -1,15 +1,9 @@
 import {getRandomInteger, getRandomValue} from "../utils.js";
+import {EMOJIS} from "../const.js";
 
 const MAX_DAYS_GUP = 30;
 const MAX_HOURS = 23;
 const MAX_MINUTES = 59;
-
-const emojis = [
-  `./images/emoji/angry.png`,
-  `./images/emoji/puke.png`,
-  `./images/emoji/sleeping.png`,
-  `./images/emoji/smile.png`
-];
 
 const comments = [
   `Interesting setting and a good cast`,
@@ -49,7 +43,7 @@ const generateDate = () => {
 
 const generateComment = () => {
   return {
-    emoji: getRandomValue(emojis),
+    emoji: getRandomValue(EMOJIS),
     text: getRandomValue(comments),
     author: generateRandomName(),
     day: generateDate()
