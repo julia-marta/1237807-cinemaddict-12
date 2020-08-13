@@ -1,18 +1,19 @@
 import {createElement} from "../utils.js";
 
-const createShowButtonMarkup = () => {
+const createTotalMarkup = (total) => {
   return (
-    `<button class="films-list__show-more">Show more</button>`
+    `<p>${total} movies inside</p>`
   );
 };
 
-export default class ShowButton {
-  constructor() {
+export default class Total {
+  constructor(total) {
+    this._total = total;
     this._element = null;
   }
 
   getTemplate() {
-    return createShowButtonMarkup();
+    return createTotalMarkup(this._total);
   }
 
   getElement() {

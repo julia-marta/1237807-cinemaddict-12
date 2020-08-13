@@ -1,18 +1,21 @@
 import {createElement} from "../utils.js";
 
-const createShowButtonMarkup = () => {
+const createMostCommentedMarkup = () => {
   return (
-    `<button class="films-list__show-more">Show more</button>`
+    `<section class="films-list--extra">
+      <h2 class="films-list__title">Most commented</h2>
+      <div class="films-list__container"></div>
+      </section>`
   );
 };
 
-export default class ShowButton {
+export default class MostCommented {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createShowButtonMarkup();
+    return createMostCommentedMarkup();
   }
 
   getElement() {

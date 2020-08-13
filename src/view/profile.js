@@ -1,4 +1,6 @@
-export const createProfileMarkup = (profile) => {
+import {createElement} from "../utils.js";
+
+const createProfileMarkup = (profile) => {
   const {rank} = profile;
 
   return (
@@ -8,3 +10,26 @@ export const createProfileMarkup = (profile) => {
     </section>`
   );
 };
+
+export default class Profile {
+  constructor(profile) {
+    this._profile = profile;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileMarkup(this._profile);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
