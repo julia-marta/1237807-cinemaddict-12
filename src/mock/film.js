@@ -167,14 +167,14 @@ export const generateFilms = (count) => {
   return new Array(count).fill().map(generateFilm);
 };
 
-export const getTopRatedFilms = (films, count) => {
-  return films.sort((a, b) => {
+export const getTopRatedFilms = (films) => {
+  return films.slice().sort((a, b) => {
     return b.rating - a.rating;
-  }).slice(0, count);
+  });
 };
 
-export const getMostCommentedFilms = (films, count) => {
-  return films.sort((a, b) => {
+export const getMostCommentedFilms = (films) => {
+  return films.slice().sort((a, b) => {
     return b.comments.length - a.comments.length;
-  }).slice(0, count);
+  });
 };
