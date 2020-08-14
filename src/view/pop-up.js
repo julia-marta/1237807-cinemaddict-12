@@ -1,4 +1,4 @@
-import {transformMinutesToHours} from "../utils.js";
+import {transformMinutesToHours, createElement} from "../utils.js";
 import {createCommentsMarkup} from "./comments.js";
 
 const createGenresMarkup = (genres) => {
@@ -54,7 +54,7 @@ const createFilmDetailsMarkup = (film) => {
   );
 };
 
-export const createPopUpMarkup = (film) => {
+const createPopUpMarkup = (film) => {
   const {poster, title, originalTitle, rating, description, age, comments} = film;
 
   const filmDetailsMarkup = createFilmDetailsMarkup(film);
@@ -102,3 +102,26 @@ export const createPopUpMarkup = (film) => {
     </section>`
   );
 };
+
+export default class PopUp {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPopUpMarkup(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

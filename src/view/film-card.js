@@ -1,4 +1,4 @@
-import {transformMinutesToHours} from "../utils.js";
+import {transformMinutesToHours, createElement} from "../utils.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -8,7 +8,7 @@ const createDescription = (description) => {
   return (text.length > 140) ? `${text.substring(0, MAX_DESCRIPTION_LENGTH)}...` : text;
 };
 
-export const createFilmCardMarkup = (film) => {
+const createFilmCardMarkup = (film) => {
   const {poster, title, rating, date, duration, genres, description, comments, isWatchList, isWatched, isFavorites} = film;
 
   const addActiveClassName = (flag) => {
@@ -40,3 +40,26 @@ export const createFilmCardMarkup = (film) => {
     </article>`
   );
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardMarkup(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
