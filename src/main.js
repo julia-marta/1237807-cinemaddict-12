@@ -15,6 +15,7 @@ import {generateFilters} from "./mock/filter.js";
 import {generateProfile} from "./mock/profile.js";
 
 const {AFTERBEGIN} = RenderPosition;
+const ESC_KEY = `Escape` || `Esc`;
 const FILM_CARDS_COUNT = 20;
 const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
@@ -49,17 +50,30 @@ const renderFilmCard = (container, film) => {
   const filmCardComponent = new FilmCardView(film);
   const popUpComponent = new PopUpView(film);
 
-  const onCloseButtonClick = (evt) => {
-    evt.preventDefault();
+  const closePopUp = () => {
     popUpComponent.getElement().remove();
     popUpComponent.removeElement();
+  }
+
+  const onCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    closePopUp();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === ESC_KEY) {
+      evt.preventDefault();
+      closePopUp();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
   };
 
   const onFilmDetailsClick = (evt) => {
     evt.preventDefault();
     render(body, popUpComponent.getElement());
-
     popUpComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onCloseButtonClick);
+    document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   filmCardComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, onFilmDetailsClick);
