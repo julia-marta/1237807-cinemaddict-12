@@ -15,7 +15,7 @@ export const createElement = (markup) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = markup;
 
-  return newElement.firstChild;
+  return newElement.firstElementChild;
 };
 
 export const render = (container, element, place = BEFOREEND) => {
