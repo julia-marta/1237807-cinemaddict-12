@@ -2,6 +2,7 @@ import ProfileView from "./view/profile.js";
 import NavigationView from "./view/navigation.js";
 import SortingView from "./view/sorting.js";
 import FilmsView from "./view/films.js";
+import FilmsListView from "./view/films-list.js"
 import AllMoviesView from "./view/all-movies.js";
 import NoMoviesView from "./view/no-movies.js";
 import TopRatedView from "./view/top-rated.js";
@@ -10,7 +11,7 @@ import FilmCardView from "./view/film-card.js";
 import ShowButtonView from "./view/show-button.js";
 import TotalView from "./view/total.js";
 import PopUpView from "./view/pop-up.js";
-import {RenderPosition, render, renderTemplate} from "./utils.js";
+import {RenderPosition, render, remove} from "./utils/render.js";
 import {generateFilms, getTopRatedFilms, getMostCommentedFilms} from "./mock/film.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateProfile} from "./mock/profile.js";
@@ -37,32 +38,30 @@ const renderFilmCard = (container, film) => {
   const popUpComponent = new PopUpView(film);
 
   const closePopUp = () => {
-    popUpComponent.getElement().remove();
-    popUpComponent.removeElement();
+    remove(popUpComponent);
+    document.removeEventListener(`keydown`, onEscKeyDown);
   }
 
   const onEscKeyDown = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       closePopUp();
-      document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
   const onCloseButtonClick = () => {
     closePopUp();
-    document.removeEventListener(`keydown`, onEscKeyDown);
   };
 
   const onFilmDetailsClick = () => {
-    render(body, popUpComponent.getElement());
+    render(body, popUpComponent);
     popUpComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
   filmCardComponent.setFilmDetailsClickHandler(onFilmDetailsClick);
 
-  render(container, filmCardComponent.getElement());
+  render(container, filmCardComponent);
 }
 
 const renderFilms = (container, films) => {
@@ -70,41 +69,47 @@ const renderFilms = (container, films) => {
   const allMoviesComponent = new AllMoviesView();
   const topRatedComponent = new TopRatedView();
   const mostCommentedComponent = new MostCommentedView();
+  const allMoviesListComponent = new FilmsListView();
+  const topRatedListComponent = new FilmsListView();
+  const mostCommentedListComponent = new FilmsListView();
 
   const renderFilmCards = (container, films, min, max) => {
     films.slice(min, max)
     .forEach((film) => renderFilmCard(container, film))
   }
 
-  render(container, filmsComponent.getElement());
+  render(container, filmsComponent);
 
   if (films.length === 0) {
-    render(filmsComponent.getElement(), new NoMoviesView().getElement(), AFTERBEGIN);
+    render(filmsComponent, new NoMoviesView(), AFTERBEGIN);
     return;
   }
 
-  render(filmsComponent.getElement(), allMoviesComponent.getElement());
-  render(filmsComponent.getElement(), topRatedComponent.getElement());
-  render(filmsComponent.getElement(), mostCommentedComponent.getElement());
+  renderFilmCards(allMoviesListComponent, films, 0, Math.min(films.length, FILM_CARDS_PER_STEP));
+  renderFilmCards(topRatedListComponent, topRatedFilms, 0, FILM_EXTRA_COUNT);
+  renderFilmCards(mostCommentedListComponent, mostCommentedFilms, 0, FILM_EXTRA_COUNT);
 
-  renderFilmCards(allMoviesComponent.getElement().lastElementChild, films, 0, Math.min(films.length, FILM_CARDS_PER_STEP));
-  renderFilmCards(topRatedComponent.getElement().lastElementChild, topRatedFilms, 0, FILM_EXTRA_COUNT);
-  renderFilmCards(mostCommentedComponent.getElement().lastElementChild, mostCommentedFilms, 0, FILM_EXTRA_COUNT);
+  render(filmsComponent, allMoviesComponent);
+  render(filmsComponent, topRatedComponent);
+  render(filmsComponent, mostCommentedComponent);
+
+  render(allMoviesComponent, allMoviesListComponent);
+  render(topRatedComponent, topRatedListComponent);
+  render(mostCommentedComponent, mostCommentedListComponent);
 
   if (films.length > FILM_CARDS_PER_STEP) {
     let renderedFilmsCount = FILM_CARDS_PER_STEP;
 
     const showButtonComponent = new ShowButtonView();
-    render(allMoviesComponent.getElement(), showButtonComponent.getElement());
+    render(allMoviesComponent, showButtonComponent);
 
     const onShowButtonClick = () => {
-      renderFilmCards(allMoviesComponent.getElement().querySelector(`.films-list__container`), films, renderedFilmsCount, renderedFilmsCount + FILM_CARDS_PER_STEP);
+      renderFilmCards(allMoviesListComponent, films, renderedFilmsCount, renderedFilmsCount + FILM_CARDS_PER_STEP);
 
       renderedFilmsCount += FILM_CARDS_PER_STEP;
 
       if (renderedFilmsCount >= films.length) {
-        showButtonComponent.getElement().remove();
-        showButtonComponent.removeElement();
+        remove(showButtonComponent);
       }
     }
 
@@ -112,8 +117,8 @@ const renderFilms = (container, films) => {
   };
 }
 
-render(header, new ProfileView(profile).getElement());
-render(main, new NavigationView(filters).getElement(), AFTERBEGIN);
-render(main, new SortingView().getElement());
+render(header, new ProfileView(profile));
+render(main, new NavigationView(filters), AFTERBEGIN);
+render(main, new SortingView());
 renderFilms(main, films)
-render(footer.lastElementChild, new TotalView(total).getElement());
+render(footer.lastElementChild, new TotalView(total));

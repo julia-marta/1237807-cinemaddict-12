@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {transformMinutesToHours} from "../utils.js";
+import {transformMinutesToHours} from "../utils/common.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 

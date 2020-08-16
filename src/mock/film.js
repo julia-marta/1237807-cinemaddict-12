@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomBoolean, getRandomValue} from "../utils.js";
+import {getRandomInteger, getRandomBoolean, getRandomValue, generateUniqueCompilation} from "../utils/common.js";
 import {generateComments} from "./comment.js";
 
 const MAX_COMMENTS = 5;
@@ -103,18 +103,6 @@ const filmActorsCount = {
 const filmGenresCount = {
   min: 1,
   max: 3
-};
-
-const generateUniqueCompilation = (source, dictionary) => {
-  const {min, max} = dictionary;
-  const count = getRandomInteger(min, max);
-  const uniqueValues = new Set();
-
-  for (let i = 0; i < count; i++) {
-    uniqueValues.add(getRandomValue(source));
-  }
-
-  return Array.from(uniqueValues);
 };
 
 const generateRating = () => {
