@@ -16,7 +16,6 @@ import {generateFilters} from "./mock/filter.js";
 import {generateProfile} from "./mock/profile.js";
 
 const {AFTERBEGIN} = RenderPosition;
-const ESC_KEY = `Escape` || `Esc`;
 const FILM_CARDS_COUNT = 20;
 const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
@@ -42,30 +41,26 @@ const renderFilmCard = (container, film) => {
     popUpComponent.removeElement();
   }
 
-  const onCloseButtonClick = (evt) => {
-    evt.preventDefault();
-    closePopUp();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  };
-
   const onEscKeyDown = (evt) => {
-    if (evt.key === ESC_KEY) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       closePopUp();
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
-  const onFilmDetailsClick = (evt) => {
-    evt.preventDefault();
+  const onCloseButtonClick = () => {
+    closePopUp();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  };
+
+  const onFilmDetailsClick = () => {
     render(body, popUpComponent.getElement());
-    popUpComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, onCloseButtonClick);
+    popUpComponent.setCloseButtonClickHandler(onCloseButtonClick);
     document.addEventListener(`keydown`, onEscKeyDown);
   };
 
-  filmCardComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, onFilmDetailsClick);
-  filmCardComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, onFilmDetailsClick);
-  filmCardComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, onFilmDetailsClick);
+  filmCardComponent.setFilmDetailsClickHandler(onFilmDetailsClick);
 
   render(container, filmCardComponent.getElement());
 }
@@ -102,8 +97,7 @@ const renderFilms = (container, films) => {
     const showButtonComponent = new ShowButtonView();
     render(allMoviesComponent.getElement(), showButtonComponent.getElement());
 
-    const onShowButtonClick = (evt) => {
-      evt.preventDefault();
+    const onShowButtonClick = () => {
       renderFilmCards(allMoviesComponent.getElement().querySelector(`.films-list__container`), films, renderedFilmsCount, renderedFilmsCount + FILM_CARDS_PER_STEP);
 
       renderedFilmsCount += FILM_CARDS_PER_STEP;
@@ -114,7 +108,7 @@ const renderFilms = (container, films) => {
       }
     }
 
-    showButtonComponent.getElement().addEventListener(`click`, onShowButtonClick);
+    showButtonComponent.setShowButtonClickHandler(onShowButtonClick);
   };
 }
 

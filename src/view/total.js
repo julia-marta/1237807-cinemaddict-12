@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createTotalMarkup = (total) => {
   return (
@@ -6,25 +6,13 @@ const createTotalMarkup = (total) => {
   );
 };
 
-export default class Total {
+export default class Total extends AbstractView {
   constructor(total) {
+    super();
     this._total = total;
-    this._element = null;
   }
 
   getTemplate() {
     return createTotalMarkup(this._total);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
