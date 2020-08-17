@@ -70,44 +70,44 @@ const ageRatings = [`0`, `6`, `12`, `16`, `18`];
 const sourceText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 const sourcePhrases = sourceText.substr(0, sourceText.length - 1).split(`. `);
 
-const phrasesInDescription = {
-  min: 1,
-  max: 5
-};
-
-const filmRating = {
-  min: 10,
-  max: 100
-};
-
 const filmDate = {
   first: new Date(1895, 0, 1),
   last: new Date()
 };
 
-const filmDurationInMinutes = {
-  min: 5,
-  max: 240
+const PhrasesCount = {
+  MIN: 1,
+  MAX: 5
 };
 
-const filmWritersCount = {
-  min: 1,
-  max: 3
+const FilmRating = {
+  MIN: 10,
+  MAX: 100
 };
 
-const filmActorsCount = {
-  min: 3,
-  max: 5
+const FilmDuration = {
+  MIN: 5,
+  MAX: 240
 };
 
-const filmGenresCount = {
-  min: 1,
-  max: 3
+const FilmWritersCount = {
+  MIN: 1,
+  MAX: 3
+};
+
+const FilmActorsCount = {
+  MIN: 3,
+  MAX: 5
+};
+
+const FilmGenresCount = {
+  MIN: 1,
+  MAX: 3
 };
 
 const generateRating = () => {
-  const {min, max} = filmRating;
-  return (getRandomInteger(min, max) / 10).toFixed(1);
+  const {MIN, MAX} = FilmRating;
+  return (getRandomInteger(MIN, MAX) / 10).toFixed(1);
 };
 
 const generateDate = () => {
@@ -121,8 +121,8 @@ const generateDate = () => {
 };
 
 const generateDuration = () => {
-  const {min, max} = filmDurationInMinutes;
-  const duration = getRandomInteger(min, max);
+  const {MIN, MAX} = FilmDuration;
+  const duration = getRandomInteger(MIN, MAX);
 
   return duration;
 };
@@ -136,13 +136,13 @@ const generateFilm = () => {
     originalTitle: getRandomValue(titles),
     rating: generateRating(),
     director: getRandomValue(directors),
-    writers: generateUniqueCompilation(writers, filmWritersCount),
-    actors: generateUniqueCompilation(actors, filmActorsCount),
+    writers: generateUniqueCompilation(writers, FilmWritersCount),
+    actors: generateUniqueCompilation(actors, FilmActorsCount),
     date: generateDate(),
     duration: generateDuration(),
     country: getRandomValue(countries),
-    genres: generateUniqueCompilation(genres, filmGenresCount),
-    description: generateUniqueCompilation(sourcePhrases, phrasesInDescription),
+    genres: generateUniqueCompilation(genres, FilmGenresCount),
+    description: generateUniqueCompilation(sourcePhrases, PhrasesCount),
     age: getRandomValue(ageRatings),
     comments: generateComments(commentsCount),
     isWatchList: getRandomBoolean(),
