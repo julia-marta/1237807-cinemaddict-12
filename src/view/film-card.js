@@ -1,4 +1,5 @@
-import {transformMinutesToHours, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {transformMinutesToHours} from "../utils/common.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -41,25 +42,26 @@ const createFilmCardMarkup = (film) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._filmDetailsClickHandler = this._filmDetailsClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardMarkup(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
+  _filmDetailsClickHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.classList.contains(`film-card__poster`) || evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__comments`)) {
+      this._callback.filmDetailsClick();
     }
-
-    return this._element;
   }
 
-  removeElement() {
-    this._element = null;
+  setFilmDetailsClickHandler(callback) {
+    this._callback.filmDetailsClick = callback;
+    this.getElement().addEventListener(`click`, this._filmDetailsClickHandler);
   }
 }

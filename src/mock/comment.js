@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomValue} from "../utils.js";
+import {getRandomInteger, getRandomValue} from "../utils/common.js";
 import {EMOJIS} from "../const.js";
 
 const MAX_DAYS_GUP = 30;

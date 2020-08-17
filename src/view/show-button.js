@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createShowButtonMarkup = () => {
   return (
@@ -6,24 +6,23 @@ const createShowButtonMarkup = () => {
   );
 };
 
-export default class ShowButton {
+export default class ShowButton extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
+    this._showButtonClickHandler = this._showButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createShowButtonMarkup();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _showButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.showButtonClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setShowButtonClickHandler(callback) {
+    this._callback.showButtonClick = callback;
+    this.getElement().addEventListener(`click`, this._showButtonClickHandler);
   }
 }
