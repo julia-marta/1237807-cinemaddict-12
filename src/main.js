@@ -1,6 +1,5 @@
 import ProfileView from "./view/profile.js";
 import NavigationView from "./view/navigation.js";
-import SortingView from "./view/sorting.js";
 import TotalView from "./view/total.js";
 import MovieListPresenter from "./presenter/movie-list.js";
 import {RenderPosition, render} from "./utils/render.js";
@@ -23,6 +22,5 @@ const footer = document.querySelector(`.footer`);
 
 render(header, new ProfileView(profile));
 render(main, new NavigationView(filters), AFTERBEGIN);
-render(main, new SortingView());
 movieListPresenter.init(films);
 render(footer.lastElementChild, new TotalView(total));
