@@ -4,3 +4,9 @@ export const EMOJIS = [
   `./images/emoji/puke.png`,
   `./images/emoji/angry.png`
 ];
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};
