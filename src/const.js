@@ -10,3 +10,9 @@ export const SortType = {
   DATE: `date`,
   RATING: `rating`
 };
+
+export const FilmsType = {
+  ALL: `all`,
+  RATED: `top rated`,
+  COMMENTED: `most commented`
+};

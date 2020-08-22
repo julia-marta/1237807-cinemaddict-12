@@ -46,7 +46,9 @@ export default class FilmCard extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
     this._filmDetailsClickHandler = this._filmDetailsClickHandler.bind(this);
+    this._controlsClickHandler = this._controlsClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -58,6 +60,26 @@ export default class FilmCard extends AbstractView {
     if (evt.target.classList.contains(`film-card__poster`) || evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__comments`)) {
       this._callback.filmDetailsClick();
     }
+  }
+
+  _controlsClickHandler(evt) {
+    evt.preventDefault();
+    switch (true) {
+      case evt.target.classList.contains(`film-card__controls-item--add-to-watchlist`):
+        this._callback.controlsClick(Object.assign({}, this._film, {isWatchList: !this._film.isWatchList}));
+        break;
+      case evt.target.classList.contains(`film-card__controls-item--mark-as-watched`):
+        this._callback.controlsClick(Object.assign({}, this._film, {isWatched: !this._film.isWatched}));
+        break;
+      case evt.target.classList.contains(`film-card__controls-item--favorite`):
+        this._callback.controlsClick(Object.assign({}, this._film, {isFavorites: !this._film.isFavorites}));
+        break;
+    }
+  }
+
+  setControlsClickHandler(callback) {
+    this._callback.controlsClick = callback;
+    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._controlsClickHandler);
   }
 
   setFilmDetailsClickHandler(callback) {
