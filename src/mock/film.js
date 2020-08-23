@@ -105,6 +105,10 @@ const FilmGenresCount = {
   MAX: 3
 };
 
+const generateID = () => {
+  return Date.now() + parseInt(Math.random() * 10000, 10);
+};
+
 const generateRating = () => {
   const {MIN, MAX} = FilmRating;
   return (getRandomInteger(MIN, MAX) / 10).toFixed(1);
@@ -131,6 +135,7 @@ const generateFilm = () => {
   const commentsCount = getRandomInteger(0, MAX_COMMENTS);
 
   return {
+    id: generateID(),
     poster: getRandomValue(posters),
     title: getRandomValue(titles),
     originalTitle: getRandomValue(titles),

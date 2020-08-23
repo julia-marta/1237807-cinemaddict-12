@@ -28,11 +28,7 @@ export default class Sorting extends AbstractView {
       return;
     }
     evt.preventDefault();
-    this.getElement().childNodes.forEach((item) => {
-      if (item.tagName === `LI` && item.firstElementChild !== evt.target && item.firstElementChild.classList.contains(`sort__button--active`)) {
-        item.firstElementChild.classList.remove(`sort__button--active`);
-      }
-    });
+    this.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
     evt.target.classList.add(`sort__button--active`);
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }

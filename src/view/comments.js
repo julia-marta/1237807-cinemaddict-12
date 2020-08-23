@@ -45,7 +45,7 @@ const createEmojiListMarkup = () => {
     </label>`).join(``);
 };
 
-export const createCommentsMarkup = (comments) => {
+export const createCommentsMarkup = (comments, isEmoji, emojiName) => {
   const commentMarkup = createCommentMarkup(comments);
   const emojiListMarkup = createEmojiListMarkup();
 
@@ -56,7 +56,10 @@ export const createCommentsMarkup = (comments) => {
     ${commentMarkup}
   </ul>
   <div class="film-details__new-comment">
-    <div for="add-emoji" class="film-details__add-emoji-label"></div>
+    <div for="add-emoji" class="film-details__add-emoji-label">
+    ${isEmoji ? `<img src="images/emoji/${emojiName}.png" width="55" height="55" alt="emoji-${emojiName}">` : ``}
+
+    </div>
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
     </label>

@@ -41,6 +41,22 @@ export const createElement = (markup) => {
   return newElement.firstElementChild;
 };
 
+export const replace = (oldElement, newElement) => {
+  if (oldElement instanceof AbstractView) {
+    oldElement = oldElement.getElement();
+  }
+
+  if (newElement instanceof AbstractView) {
+    newElement = newElement.getElement();
+  }
+
+  if (oldElement === null || newElement === null) {
+    throw new Error(`Can't replace unexisting elements`);
+  }
+
+  oldElement.replaceWith(newElement);
+};
+
 export const remove = (component) => {
   if (!(component instanceof AbstractView)) {
     throw new Error(`Can remove only components`);
