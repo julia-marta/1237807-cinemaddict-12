@@ -105,9 +105,10 @@ const createPopUpMarkup = (data) => {
 };
 
 export default class PopUp extends SmartView {
-  constructor(film) {
+  constructor(film, emoji) {
     super();
-    this._data = PopUp.parseFilmToData(film);
+    this._emoji = emoji || {isEmoji: false, emojiName: ``};
+    this._data = PopUp.parseFilmToData(film, this._emoji);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._controlsToggleHandler = this._controlsToggleHandler.bind(this);
     this._emojiToggleHandler = this._emojiToggleHandler.bind(this);
@@ -115,7 +116,8 @@ export default class PopUp extends SmartView {
   }
 
   reset(film) {
-    this.updateData(PopUp.parseFilmToData(film));
+    this._emoji = {isEmoji: false, emojiName: ``};
+    this.updateData(PopUp.parseFilmToData(film, this._emoji));
   }
 
   getTemplate() {
@@ -126,6 +128,10 @@ export default class PopUp extends SmartView {
     this._setInnerHandlers();
     this.setCloseButtonClickHandler(this._callback.closeButtonClick);
     this.setControlsToggleHandler(this._callback.controlsToggle);
+  }
+
+  restoreEmoji() {
+    return this._emoji;
   }
 
   _closeButtonClickHandler(evt) {
@@ -150,7 +156,8 @@ export default class PopUp extends SmartView {
 
   _emojiToggleHandler(evt) {
     evt.preventDefault();
-    this.updateData({isEmoji: true, emojiName: evt.target.value});
+    this._emoji = {isEmoji: true, emojiName: evt.target.value};
+    this.updateData(this._emoji);
   }
 
   _setInnerHandlers() {
@@ -167,8 +174,8 @@ export default class PopUp extends SmartView {
     this.getElement().querySelector(`.film-details__controls`).addEventListener(`change`, this._controlsToggleHandler);
   }
 
-  static parseFilmToData(film) {
-    return Object.assign({}, film, {isEmoji: false, emojiName: ``});
+  static parseFilmToData(film, emoji) {
+    return Object.assign({}, film, emoji);
   }
 
   static parseDataToFilm(data) {

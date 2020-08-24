@@ -29,13 +29,18 @@ export default class Film {
 
   init(film) {
     this._film = film;
+    this._emoji = null;
+    this._isPopUpReOpened = false;
 
     const prevFilmCardComponent = this._filmCardComponent;
     const prevPopUpComponent = this._popUpComponent;
-    this._isPopUpReOpened = false;
+
+    if (prevPopUpComponent) {
+      this._emoji = prevPopUpComponent.restoreEmoji();
+    }
 
     this._filmCardComponent = new FilmCardView(film);
-    this._popUpComponent = new PopUpView(film);
+    this._popUpComponent = new PopUpView(film, this._emoji);
 
     this._filmCardComponent.setFilmDetailsClickHandler(this._handleFilmDetailsClick);
     this._filmCardComponent.setControlsClickHandler(this._handleControlsChange);
