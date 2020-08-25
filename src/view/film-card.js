@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {transformMinutesToHours} from "../utils/common.js";
+import {formatDuration, formatDate} from "../utils/film.js";
 
 const MAX_DESCRIPTION_LENGTH = 140;
 
@@ -21,8 +21,8 @@ const createFilmCardMarkup = (film) => {
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${date.getFullYear()}</span>
-      <span class="film-card__duration">${transformMinutesToHours(duration)}</span>
+      <span class="film-card__year">${formatDate(date)}</span>
+      <span class="film-card__duration">${formatDuration(duration)}</span>
       <span class="film-card__genre">${genres[0]}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">
