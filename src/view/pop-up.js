@@ -1,5 +1,5 @@
 import SmartView from "./smart.js";
-import {transformMinutesToHours} from "../utils/common.js";
+import {formatDuration, formatDate} from "../utils/film.js";
 import {createCommentsMarkup} from "./comments.js";
 
 const createGenresMarkup = (genres) => {
@@ -40,11 +40,11 @@ const createFilmDetailsMarkup = (film) => {
   </tr>
   <tr class="film-details__row">
     <td class="film-details__term">Release Date</td>
-    <td class="film-details__cell">${date.toLocaleString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`})}</td>
+    <td class="film-details__cell">${formatDate(date, true)}</td>
   </tr>
   <tr class="film-details__row">
     <td class="film-details__term">Runtime</td>
-    <td class="film-details__cell">${transformMinutesToHours(duration)}</td>
+    <td class="film-details__cell">${formatDuration(duration)}</td>
   </tr>
   <tr class="film-details__row">
     <td class="film-details__term">Country</td>
