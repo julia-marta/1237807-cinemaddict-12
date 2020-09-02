@@ -1,7 +1,5 @@
-import {getRandomInteger, getRandomBoolean, getRandomValue, generateUniqueCompilation} from "../utils/common.js";
+import {getRandomInteger, getRandomBoolean, getRandomValue, generateUniqueCompilation, generateID} from "../utils/common.js";
 import {generateComments} from "./comment.js";
-
-const MAX_COMMENTS = 5;
 
 const posters = [
   `./images/posters/the-dance-of-life.jpg`,
@@ -105,9 +103,9 @@ const FilmGenresCount = {
   MAX: 3
 };
 
-const generateID = () => {
-  return Date.now() + parseInt(Math.random() * 10000, 10);
-};
+
+
+
 
 const generateRating = () => {
   const {MIN, MAX} = FilmRating;
@@ -132,7 +130,6 @@ const generateDuration = () => {
 };
 
 const generateFilm = () => {
-  const commentsCount = getRandomInteger(0, MAX_COMMENTS);
 
   return {
     id: generateID(),
@@ -149,7 +146,7 @@ const generateFilm = () => {
     genres: generateUniqueCompilation(genres, FilmGenresCount),
     description: generateUniqueCompilation(sourcePhrases, PhrasesCount),
     age: getRandomValue(ageRatings),
-    comments: generateComments(commentsCount),
+    comments: generateComments(),
     isWatchList: getRandomBoolean(),
     isWatched: getRandomBoolean(),
     isFavorites: getRandomBoolean()

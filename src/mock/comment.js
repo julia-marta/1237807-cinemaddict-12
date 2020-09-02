@@ -1,6 +1,7 @@
-import {getRandomInteger, getRandomValue} from "../utils/common.js";
+import {getRandomInteger, getRandomValue, generateID} from "../utils/common.js";
 import {EMOJIS} from "../const.js";
 
+const MAX_COMMENTS = 5;
 const MAX_DAYS_GUP = 30;
 const MAX_HOURS = 23;
 const MAX_MINUTES = 59;
@@ -43,6 +44,7 @@ const generateDate = () => {
 
 const generateComment = () => {
   return {
+    id: generateID(),
     emoji: getRandomValue(EMOJIS),
     text: getRandomValue(comments),
     author: generateRandomName(),
@@ -50,6 +52,7 @@ const generateComment = () => {
   };
 };
 
-export const generateComments = (count) => {
+export const generateComments = () => {
+  const count = getRandomInteger(0, MAX_COMMENTS);
   return new Array(count).fill().map(generateComment);
 };

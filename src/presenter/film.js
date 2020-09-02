@@ -1,30 +1,34 @@
 import FilmCardView from "../view/film-card.js";
 import PopUpView from "../view/pop-up.js";
 import {render, replace, remove} from "../utils/render.js";
-
-const body = document.querySelector(`body`);
-const Mode = {
-  DEFAULT: `DEFAULT`,
-  POPUP: `POPUP`
-};
+import {Mode, UserAction, UpdateType} from "../const.js";
 
 const {DEFAULT, POPUP} = Mode;
+const {UPDATE, ADD, DELETE} = UserAction;
+const {MINOR} = UpdateType;
+
+const body = document.querySelector(`body`);
+
 
 export default class Film {
-  constructor(filmContainer, changeFilm, changeMode) {
+  constructor(filmContainer, changeFilm, changeMode, commentsModel) {
     this._filmContainer = filmContainer;
     this._popUpContainer = body;
     this._changeFilm = changeFilm;
     this._changeMode = changeMode;
+    this._commentsModel = commentsModel;
 
     this._filmCardComponent = null;
     this._popUpComponent = null;
     this._mode = DEFAULT;
 
     this._handleFilmDetailsClick = this._handleFilmDetailsClick.bind(this);
+    this._handleModelCommentsEvent = this._handleModelCommentsEvent.bind(this);
     this._handleControlsChange = this._handleControlsChange.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+
+    this._commentsModel.addObserver(this._handleModelCommentsEvent);
   }
 
   init(film) {
@@ -93,8 +97,15 @@ export default class Film {
     this._mode = DEFAULT;
   }
 
+  _handleModelCommentsEvent(filmID) {
+    if (this._film.id === filmID) {
+      this._film.comments = this._commentsModel.getComments()[filmID];
+      this._changeFilm(UPDATE, this._film, MINOR);
+    }
+  }
+
   _handleControlsChange(film) {
-    this._changeFilm(film);
+    this._changeFilm(UPDATE, film, MINOR);
   }
 
   _handleFilmDetailsClick() {
