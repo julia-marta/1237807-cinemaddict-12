@@ -5,6 +5,20 @@ export const EMOJIS = [
   `./images/emoji/angry.png`
 ];
 
+export const RANDOM_NAMES = [
+  `John`,
+  `Jimmy`,
+  `Cary`,
+  `Alfred`
+];
+
+export const RANDOM_SURNAMES = [
+  `Doe`,
+  `Stewart`,
+  `Grant`,
+  `Hitchcock`
+];
+
 export const Mode = {
   DEFAULT: `DEFAULT`,
   POPUP: `POPUP`
@@ -17,8 +31,16 @@ export const UserAction = {
 };
 
 export const UpdateType = {
+  PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
+};
+
+export const FilterType = {
+  ALL: `allmovies`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`
 };
 
 export const SortType = {

@@ -1,3 +1,5 @@
+import {RANDOM_NAMES, RANDOM_SURNAMES} from "../const.js";
+
 export const getRandomInteger = (min = 0, max = 1) => {
   return Math.floor(min + Math.random() * (max - min + 1));
 };
@@ -25,4 +27,9 @@ export const generateUniqueCompilation = (items, limits) => {
 
 export const generateID = () => {
   return Date.now() + parseInt(Math.random() * 10000, 10);
+};
+
+export const generateRandomName = () => {
+
+  return `${getRandomValue(RANDOM_NAMES)} ${getRandomValue(RANDOM_SURNAMES)}`;
 };

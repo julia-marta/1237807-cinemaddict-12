@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomValue, generateID} from "../utils/common.js";
+import {getRandomInteger, getRandomValue, generateID, generateRandomName} from "../utils/common.js";
 import {EMOJIS} from "../const.js";
 
 const MAX_COMMENTS = 5;
@@ -12,25 +12,6 @@ const comments = [
   `Very very old. Meh`,
   `Almost two hours? Seriously?`
 ];
-
-const names = [
-  `John`,
-  `Jimmy`,
-  `Cary`,
-  `Alfred`
-];
-
-const surnames = [
-  `Doe`,
-  `Stewart`,
-  `Grant`,
-  `Hitchcock`
-];
-
-const generateRandomName = () => {
-
-  return `${getRandomValue(names)} ${getRandomValue(surnames)}`;
-};
 
 const generateDate = () => {
   const daysGap = getRandomInteger(-MAX_DAYS_GUP, 0);

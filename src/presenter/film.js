@@ -1,11 +1,12 @@
 import FilmCardView from "../view/film-card.js";
 import PopUpView from "../view/pop-up.js";
+import CommentPresenter from "../presenter/comment.js";
 import {render, replace, remove} from "../utils/render.js";
 import {Mode, UserAction, UpdateType} from "../const.js";
 
 const {DEFAULT, POPUP} = Mode;
 const {UPDATE, ADD, DELETE} = UserAction;
-const {MINOR} = UpdateType;
+const {PATCH, MINOR} = UpdateType;
 
 const body = document.querySelector(`body`);
 
@@ -22,13 +23,16 @@ export default class Film {
     this._popUpComponent = null;
     this._mode = DEFAULT;
 
+    this._handleModelCommentsUpdate = this._handleModelCommentsUpdate.bind(this);
+    this._handlePopUpCommentsRender = this._handlePopUpCommentsRender.bind(this);
+    this._handleShortcutKeysDown = this._handleShortcutKeysDown.bind(this);
     this._handleFilmDetailsClick = this._handleFilmDetailsClick.bind(this);
-    this._handleModelCommentsEvent = this._handleModelCommentsEvent.bind(this);
     this._handleControlsChange = this._handleControlsChange.bind(this);
+    this._handleToggleChange = this._handleToggleChange.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
 
-    this._commentsModel.addObserver(this._handleModelCommentsEvent);
+    this._commentsModel.addObserver(this._handleModelCommentsUpdate);
   }
 
   init(film) {
@@ -44,11 +48,12 @@ export default class Film {
     }
 
     this._filmCardComponent = new FilmCardView(film);
-    this._popUpComponent = new PopUpView(film, this._emoji);
+    this._popUpComponent = new PopUpView(film, this._emoji, this._handlePopUpCommentsRender);
+    
 
     this._filmCardComponent.setFilmDetailsClickHandler(this._handleFilmDetailsClick);
     this._filmCardComponent.setControlsClickHandler(this._handleControlsChange);
-    this._popUpComponent.setControlsToggleHandler(this._handleControlsChange);
+    this._popUpComponent.setControlsToggleHandler(this._handleToggleChange);
     this._popUpComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     if (prevFilmCardComponent === null || prevPopUpComponent === null) {
@@ -84,6 +89,7 @@ export default class Film {
     if (this._isPopUpReOpened) {
       this._popUpComponent.restoreHandlers();
     }
+    this._popUpComponent.setSubmitCommentHandler(this._handleShortcutKeysDown);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = POPUP;
@@ -93,19 +99,46 @@ export default class Film {
     this._isPopUpReOpened = true;
     this._popUpComponent.reset(this._film);
     remove(this._popUpComponent);
+    this._popUpComponent.removeSubmitCommentHandler(this._handleShortcutKeysDown);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = DEFAULT;
+    this._changeFilm(UPDATE, MINOR, this._film);
   }
 
-  _handleModelCommentsEvent(filmID) {
+  _handleModelCommentsUpdate(updateType, updatedComment, filmID) {
     if (this._film.id === filmID) {
-      this._film.comments = this._commentsModel.getComments()[filmID];
-      this._changeFilm(UPDATE, this._film, MINOR);
+      switch (updateType) {
+        case ADD: 
+        this._film.comments = Array.from(new Set([...this._film.comments, updatedComment])) 
+        break;
+        case DELETE:
+        this._film.comments = this._film.comments.filter((comment) => comment.id !== updatedComment.id)
+        break;
+      }
+      console.log(this._film.comments.includes(updatedComment));
+      this._changeFilm(UPDATE, PATCH, this._film);
     }
   }
 
+  _handlePopUpCommentsRender(container) {
+    const comments = this._commentsModel.getComments()[this._film.id];
+    const commentPresenter = new CommentPresenter(container, this._film.id, this._changeFilm);
+    comments.forEach((comment) => commentPresenter.init(comment));
+  }
+
+  _handleShortcutKeysDown(container, newComment) {
+    const newCommentPresenter = new CommentPresenter(container, this._film.id, this._changeFilm);
+    newCommentPresenter.init(newComment);
+    this._changeFilm(ADD, ADD, newComment, this._film.id);
+    this._popUpComponent.reset(this._film);
+  }
+
   _handleControlsChange(film) {
-    this._changeFilm(UPDATE, film, MINOR);
+    this._changeFilm(UPDATE, MINOR, film);
+  }
+
+  _handleToggleChange(film) {
+    this._changeFilm(UPDATE, PATCH, film);
   }
 
   _handleFilmDetailsClick() {

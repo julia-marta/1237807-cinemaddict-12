@@ -23,9 +23,14 @@ export default class Smart extends AbstractView {
     prevElement.replaceWith(newElement);
     prevElement = null;
     this.restoreHandlers();
+    this.restoreComments();
   }
 
   restoreHandlers() {
+    throw new Error(`Abstract method not implemented: restoreHandlers`);
+  }
+
+  restoreComments() {
     throw new Error(`Abstract method not implemented: restoreHandlers`);
   }
 }
