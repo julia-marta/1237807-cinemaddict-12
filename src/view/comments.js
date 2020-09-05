@@ -1,3 +1,4 @@
+import he from "he";
 import {EMOJIS} from "../const.js";
 
 const createEmojiListMarkup = () => {
@@ -10,7 +11,7 @@ const createEmojiListMarkup = () => {
     </label>`).join(``);
 };
 
-export const createCommentsMarkup = (comments, isEmoji, emojiName) => {
+export const createCommentsMarkup = (comments, isEmoji, emojiName, text) => {
 
   const emojiListMarkup = createEmojiListMarkup();
 
@@ -26,7 +27,8 @@ export const createCommentsMarkup = (comments, isEmoji, emojiName) => {
 
     </div>
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
+      name="comment">${he.encode(text)}</textarea>
     </label>
     <div class="film-details__emoji-list">
     ${emojiListMarkup}

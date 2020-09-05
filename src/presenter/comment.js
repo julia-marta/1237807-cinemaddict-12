@@ -1,9 +1,8 @@
 import CommentView from "../view/comment.js";
-import {render, replace, remove} from "../utils/render.js";
-import {UserAction, UpdateType} from "../const.js";
+import {render, remove} from "../utils/render.js";
+import {UserAction} from "../const.js";
 
-const {UPDATE, ADD, DELETE} = UserAction;
-const {PATCH, MINOR} = UpdateType;
+const {DELETE} = UserAction;
 
 export default class Comment {
   constructor(commentsContainer, filmID, changeComment) {
@@ -17,7 +16,7 @@ export default class Comment {
   init(comment) {
     this._comment = comment;
     this._commentComponent = new CommentView(this._comment);
-    this._commentComponent.setDeleteClickHandler(this._handleDeleteClick)
+    this._commentComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     render(this._commentsContainer, this._commentComponent);
   }
@@ -28,6 +27,6 @@ export default class Comment {
 
   _handleDeleteClick(comment) {
     this._changeComment(DELETE, DELETE, comment, this._filmID);
+    this.destroy();
   }
 }
-

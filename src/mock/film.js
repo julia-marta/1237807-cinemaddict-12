@@ -103,10 +103,6 @@ const FilmGenresCount = {
   MAX: 3
 };
 
-
-
-
-
 const generateRating = () => {
   const {MIN, MAX} = FilmRating;
   return (getRandomInteger(MIN, MAX) / 10).toFixed(1);

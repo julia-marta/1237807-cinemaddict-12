@@ -95,10 +95,10 @@ export default class MovieList {
         this._moviesModel.updateMovie(updateType, updatedData);
         break;
       case ADD:
-        this._commentsModel.addComment(updateType, updatedData, filmID)
+        this._commentsModel.addComment(updateType, updatedData, filmID);
         break;
       case DELETE:
-        this._commentsModel.deleteComment(updateType, updatedData, filmID)
+        this._commentsModel.deleteComment(updateType, updatedData, filmID);
         break;
     }
   }
@@ -133,7 +133,7 @@ export default class MovieList {
     }
     this._currentSortType = sortType;
 
-    this._clearMovieList({resetAllMoviesOnly: true, resetRenderedFilmsCount: true})
+    this._clearMovieList({resetAllMoviesOnly: true, resetRenderedFilmsCount: true});
     this._renderSorting();
     this._renderAllMoviesList();
   }
@@ -200,7 +200,7 @@ export default class MovieList {
   _handleShowButtonClick() {
     const filmsCount = this._getFilms().length;
     const newRenderedFilmsCount = Math.min(filmsCount, this._renderedFilmsCount + FILM_CARDS_PER_STEP);
-    const addFilmsCount =  this._getFilms().slice(this._renderedFilmsCount, newRenderedFilmsCount);
+    const addFilmsCount = this._getFilms().slice(this._renderedFilmsCount, newRenderedFilmsCount);
 
 
     this._renderFilmCards(this._allMoviesListComponent, addFilmsCount, ALL);

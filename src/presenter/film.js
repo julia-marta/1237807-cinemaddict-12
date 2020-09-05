@@ -38,6 +38,7 @@ export default class Film {
   init(film) {
     this._film = film;
     this._emoji = null;
+    this._newComment = null;
     this._isPopUpReOpened = false;
 
     const prevFilmCardComponent = this._filmCardComponent;
@@ -45,11 +46,12 @@ export default class Film {
 
     if (prevPopUpComponent) {
       this._emoji = prevPopUpComponent.restoreEmoji();
+      this._newComment = prevPopUpComponent.restoreNewComment();
     }
 
     this._filmCardComponent = new FilmCardView(film);
-    this._popUpComponent = new PopUpView(film, this._emoji, this._handlePopUpCommentsRender);
-    
+    this._popUpComponent = new PopUpView(film, this._emoji, this._newComment, this._handlePopUpCommentsRender);
+    this._popUpComponent.setSubmitCommentHandler(this._handleShortcutKeysDown);
 
     this._filmCardComponent.setFilmDetailsClickHandler(this._handleFilmDetailsClick);
     this._filmCardComponent.setControlsClickHandler(this._handleControlsChange);
@@ -89,7 +91,6 @@ export default class Film {
     if (this._isPopUpReOpened) {
       this._popUpComponent.restoreHandlers();
     }
-    this._popUpComponent.setSubmitCommentHandler(this._handleShortcutKeysDown);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._changeMode();
     this._mode = POPUP;
@@ -99,7 +100,6 @@ export default class Film {
     this._isPopUpReOpened = true;
     this._popUpComponent.reset(this._film);
     remove(this._popUpComponent);
-    this._popUpComponent.removeSubmitCommentHandler(this._handleShortcutKeysDown);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = DEFAULT;
     this._changeFilm(UPDATE, MINOR, this._film);
@@ -108,14 +108,14 @@ export default class Film {
   _handleModelCommentsUpdate(updateType, updatedComment, filmID) {
     if (this._film.id === filmID) {
       switch (updateType) {
-        case ADD: 
-        this._film.comments = Array.from(new Set([...this._film.comments, updatedComment])) 
-        break;
+        case ADD:
+          this._film.comments = Array.from(new Set([...this._film.comments, updatedComment]));
+          break;
         case DELETE:
-        this._film.comments = this._film.comments.filter((comment) => comment.id !== updatedComment.id)
-        break;
+          this._film.comments = this._film.comments.filter((comment) => comment.id !== updatedComment.id);
+          break;
       }
-      console.log(this._film.comments.includes(updatedComment));
+
       this._changeFilm(UPDATE, PATCH, this._film);
     }
   }

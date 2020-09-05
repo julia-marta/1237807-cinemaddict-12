@@ -57,10 +57,10 @@ const createFilmDetailsMarkup = (film) => {
 };
 
 const createPopUpMarkup = (data) => {
-  const {poster, title, originalTitle, rating, description, age, comments, isWatchList, isWatched, isFavorites, isEmoji, emojiName} = data;
+  const {poster, title, originalTitle, rating, description, age, comments, isWatchList, isWatched, isFavorites, isEmoji, emojiName, text} = data;
 
   const filmDetailsMarkup = createFilmDetailsMarkup(data);
-  const commentsMarkup = createCommentsMarkup(comments, isEmoji, emojiName);
+  const commentsMarkup = createCommentsMarkup(comments, isEmoji, emojiName, text);
 
   return (
     `<section class="film-details">
@@ -106,15 +106,14 @@ const createPopUpMarkup = (data) => {
 };
 
 export default class PopUp extends SmartView {
-  constructor(film, emoji, renderComments) {
+  constructor(film, emoji, newComment, renderComments) {
     super();
     this._emoji = emoji || {isEmoji: false, emojiName: ``};
-    this._data = PopUp.parseFilmToData(film, this._emoji);
+    this._newComment = newComment || {text: ``};
+    this._data = PopUp.parseFilmToData(film, this._emoji, this._newComment);
     this._comment = null;
     this._renderComments = renderComments;
-
     this._commentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
-    this._newCommentText = this.getElement().querySelector(`.film-details__comment-input`).value;
 
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._controlsToggleHandler = this._controlsToggleHandler.bind(this);
@@ -128,7 +127,8 @@ export default class PopUp extends SmartView {
 
   reset(film) {
     this._emoji = {isEmoji: false, emojiName: ``};
-    this.updateData(PopUp.parseFilmToData(film, this._emoji));
+    this._newComment = {text: ``};
+    this.updateData(PopUp.parseFilmToData(film, this._emoji, this._newComment));
   }
 
   getTemplate() {
@@ -139,6 +139,7 @@ export default class PopUp extends SmartView {
     this._setInnerHandlers();
     this.setCloseButtonClickHandler(this._callback.closeButtonClick);
     this.setControlsToggleHandler(this._callback.controlsToggle);
+    this.setSubmitCommentHandler(this._callback.submitComment);
   }
 
   restoreComments() {
@@ -150,21 +151,23 @@ export default class PopUp extends SmartView {
     return this._emoji;
   }
 
- _createComment() {
-  const commentsEmoji = this.getElement().querySelector(`.film-details__add-emoji-label img`);
+  restoreNewComment() {
+    return this._newComment;
+  }
 
-    if (!commentsEmoji || !this._newCommentText) {
+  _createComment() {
+    if (!this._emoji.emojiName || !this._newComment.text) {
       throw new Error(`Can't create comment`);
     }
 
-  this._comment = {
-    id: generateID(),
-    emoji: commentsEmoji.src,
-    text: this._newCommentText,
-    author: generateRandomName(),
-    day: new Date()
-  };
- }
+    this._comment = {
+      id: generateID(),
+      emoji: `./images/emoji/${this._emoji.emojiName}.png`,
+      text: this._newComment.text,
+      author: generateRandomName(),
+      day: new Date()
+    };
+  }
 
   _closeButtonClickHandler(evt) {
     evt.preventDefault();
@@ -191,8 +194,6 @@ export default class PopUp extends SmartView {
       evt.preventDefault();
       this._createComment();
       this._callback.submitComment(this._commentsContainer, this._comment);
-      this._comment = null;
-
     }
   }
 
@@ -204,7 +205,8 @@ export default class PopUp extends SmartView {
 
   _commentsInputHandler(evt) {
     evt.preventDefault();
-    this._newCommentText = evt.target.value;
+    this._newComment = {text: evt.target.value};
+    this.updateData(this._newComment, true);
   }
 
   _setInnerHandlers() {
@@ -224,20 +226,12 @@ export default class PopUp extends SmartView {
 
   setSubmitCommentHandler(callback) {
     this._callback.submitComment = callback;
-    document.addEventListener(`keydown`, this._shortcutKeysDownHandler);
-    console.log(`установился`)
-  }
-
-  removeSubmitCommentHandler(callback) {
-    this._callback.submitComment = callback;
-    document.removeEventListener(`keydown`, this._shortcutKeysDownHandler);
-    console.log(`удалился`)
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._shortcutKeysDownHandler);
   }
 
 
-
-  static parseFilmToData(film, emoji) {
-    return Object.assign({}, film, emoji);
+  static parseFilmToData(film, emoji, comment) {
+    return Object.assign({}, film, emoji, comment);
   }
 
   static parseDataToFilm(data) {
@@ -245,6 +239,7 @@ export default class PopUp extends SmartView {
 
     delete data.isEmoji;
     delete data.emojiName;
+    delete data.text;
 
     return data;
   }

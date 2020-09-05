@@ -29,7 +29,7 @@ export const render = (container, element, place = BEFOREEND, targetElement) => 
       container.append(element);
       break;
     case BEFORE:
-      container.insertBefore(element, targetElement)
+      container.insertBefore(element, targetElement);
   }
 };
 

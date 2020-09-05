@@ -1,4 +1,4 @@
-import NavigationView from "../view/navigation.js"
+import NavigationView from "../view/navigation.js";
 import {getFiltersCount} from "../utils/filter.js";
 import {RenderPosition, render, replace, remove} from "../utils/render.js";
 import {UpdateType} from "../const.js";
@@ -31,9 +31,9 @@ export default class Navigation {
     this._navigationComponent.setFilterChangeHandler(this._handleFilterChange);
 
     if (prevNavigationComponent === null) {
-        render(this._navigationContainer, this._navigationComponent, AFTERBEGIN);
-        return;
-      }
+      render(this._navigationContainer, this._navigationComponent, AFTERBEGIN);
+      return;
+    }
 
     replace(prevNavigationComponent, this._navigationComponent);
     remove(prevNavigationComponent);
@@ -52,9 +52,8 @@ export default class Navigation {
   }
 
   _getFilters() {
-      const movies = this._moviesModel.getMovies();
+    const movies = this._moviesModel.getMovies();
 
-      return getFiltersCount(movies);
+    return getFiltersCount(movies);
   }
 }
-
