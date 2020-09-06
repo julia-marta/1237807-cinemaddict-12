@@ -6,12 +6,16 @@ export default class Smart extends AbstractView {
     this._data = {};
   }
 
-  updateData(newData) {
+  updateData(newData, isUpdateDataOnly) {
     if (!newData) {
       return;
     }
 
     this._data = Object.assign({}, this._data, newData);
+
+    if (isUpdateDataOnly) {
+      return;
+    }
     this.updateElement();
   }
 
@@ -23,9 +27,14 @@ export default class Smart extends AbstractView {
     prevElement.replaceWith(newElement);
     prevElement = null;
     this.restoreHandlers();
+    this.restoreComments();
   }
 
   restoreHandlers() {
+    throw new Error(`Abstract method not implemented: restoreHandlers`);
+  }
+
+  restoreComments() {
     throw new Error(`Abstract method not implemented: restoreHandlers`);
   }
 }

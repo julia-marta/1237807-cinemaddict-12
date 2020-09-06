@@ -1,11 +1,9 @@
 import moment from "moment";
+import 'moment-duration-format';
 
 export const formatDuration = (minutes) => {
-  const duration = moment.duration(minutes, `minutes`);
-  const durationHours = `${duration.hours() > 0 ? `${duration.hours()}h` : ``}`;
-  const durationMinutes = `${duration.minutes() > 0 ? `${duration.minutes()}m` : ``}`;
 
-  return `${durationHours} ${durationMinutes}`;
+  return moment.duration(minutes, `minutes`).format(`h[h] m[m]`);
 };
 
 export const formatDate = (date, isFullDate) => {
