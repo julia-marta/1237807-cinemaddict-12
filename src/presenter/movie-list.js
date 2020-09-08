@@ -52,15 +52,23 @@ export default class MovieList {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleShowButtonClick = this._handleShowButtonClick.bind(this);
+  }
+
+  init() {
+    render(this._movieListContainer, this._movieListComponent);
+    this._renderMovieList();
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._commentsModel.addObserver(this._handleCommentsModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  init() {
-    render(this._movieListContainer, this._movieListComponent);
-    this._renderMovieList();
+  destroy() {
+    this._clearMovieList({resetRenderedFilmsCount: true, resetSortType: true});
+    remove(this._movieListComponent);
+    this._moviesModel.removeObserver(this._handleModelEvent);
+    this._commentsModel.removeObserver(this._handleCommentsModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {

@@ -33,8 +33,4 @@ export default class Smart extends AbstractView {
   restoreHandlers() {
     throw new Error(`Abstract method not implemented: restoreHandlers`);
   }
-
-  restoreComments() {
-    throw new Error(`Abstract method not implemented: restoreHandlers`);
-  }
 }

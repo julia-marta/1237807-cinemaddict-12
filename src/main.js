@@ -9,7 +9,6 @@ import {render} from "./utils/render.js";
 import {generateFilms} from "./mock/film.js";
 import {generateProfile} from "./mock/profile.js";
 
-
 const FILM_CARDS_COUNT = 20;
 
 const films = generateFilms(FILM_CARDS_COUNT);
@@ -27,7 +26,7 @@ const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
 const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel);
-const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel);
+const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
 render(header, new ProfileView(profile));
 movieListPresenter.init();
