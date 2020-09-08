@@ -1,23 +1,6 @@
-export const EMOJIS = [
-  `./images/emoji/smile.png`,
-  `./images/emoji/sleeping.png`,
-  `./images/emoji/puke.png`,
-  `./images/emoji/angry.png`
-];
-
-export const RANDOM_NAMES = [
-  `John`,
-  `Jimmy`,
-  `Cary`,
-  `Alfred`
-];
-
-export const RANDOM_SURNAMES = [
-  `Doe`,
-  `Stewart`,
-  `Grant`,
-  `Hitchcock`
-];
+export const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
+export const RANDOM_NAMES = [`John`, `Jimmy`, `Cary`, `Alfred`];
+export const RANDOM_SURNAMES = [`Doe`, `Stewart`, `Grant`, `Hitchcock`];
 
 export const Mode = {
   DEFAULT: `DEFAULT`,
