@@ -1,10 +1,83 @@
 import moment from "moment";
-import 'moment-duration-format';
+import Chart from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from "./smart.js";
 import {Range, getFilmsInRange, getTotalDuration, getGenresCount, getTopGenre} from "../utils/statistics.js";
 import {getRank} from "../utils/profile.js";
 
 const {ALLTIME} = Range;
+const BAR_HEIGHT = 50;
+
+const renderGenresChart = (statisticCtx, films, currentRange) => {
+
+  const filmsInRange = films.length !== 0 ? getFilmsInRange(films, currentRange) : [];
+
+  if (filmsInRange.length === 0) {
+    statisticCtx.classList.add(`visually-hidden`);
+  }
+  const genresCount = getGenresCount(filmsInRange);
+  statisticCtx.height = BAR_HEIGHT * Object.keys(genresCount).length;
+
+  const genresTitles = Object.keys(genresCount);
+  const genresTitlesCount = Object.values(genresCount);
+
+  return new Chart(statisticCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: genresTitles,
+      datasets: [{
+        data: genresTitlesCount,
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 24
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
+    }
+  });
+};
 
 const createStatisticFiltersMarkup = (currentRange) => {
 
@@ -12,7 +85,6 @@ const createStatisticFiltersMarkup = (currentRange) => {
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${range.value}" value="${range.value}" ${range.value === currentRange ? `checked` : ``}>
     <label for="statistic-${range.value}" class="statistic__filters-label">${range.label}</label>`).join(``);
 };
-
 
 const createStatisticsMarkup = (data) => {
   const {films, currentRange} = data;
@@ -70,16 +142,28 @@ export default class Statistics extends SmartView {
       currentRange: ALLTIME.value
     };
 
+    this._genresChart = null;
+
     this._rangeChangeHandler = this._rangeChangeHandler.bind(this);
     this._setRangeChangeHandler();
+    this._setGenresChart();
   }
 
   getTemplate() {
     return createStatisticsMarkup(this._data);
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
+  }
+
   restoreHandlers() {
     this._setRangeChangeHandler();
+    this._setGenresChart();
   }
 
   _rangeChangeHandler(evt) {
@@ -89,5 +173,16 @@ export default class Statistics extends SmartView {
 
   _setRangeChangeHandler() {
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._rangeChangeHandler);
+  }
+
+  _setGenresChart() {
+    if (this._genresChart !== null) {
+      this._genresChart = null;
+    }
+
+    const {films, currentRange} = this._data;
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+
+    this._genresChart = renderGenresChart(statisticCtx, films, currentRange);
   }
 }
