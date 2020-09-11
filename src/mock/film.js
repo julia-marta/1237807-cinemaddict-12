@@ -68,9 +68,14 @@ const ageRatings = [`0`, `6`, `12`, `16`, `18`];
 const sourceText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 const sourcePhrases = sourceText.substr(0, sourceText.length - 1).split(`. `);
 
-const filmDate = {
-  first: new Date(1895, 0, 1),
-  last: new Date()
+const FilmDate = {
+  FIRST: new Date(1895, 0, 1),
+  LAST: new Date()
+};
+
+const WatchedDate = {
+  FIRST: new Date(2019, 8, 1),
+  LAST: new Date()
 };
 
 const PhrasesCount = {
@@ -108,8 +113,7 @@ const generateRating = () => {
   return (getRandomInteger(MIN, MAX) / 10).toFixed(1);
 };
 
-const generateDate = () => {
-  const {first, last} = filmDate;
+const generateDate = (first, last) => {
   const minTimestamp = first - new Date(0);
   const maxTimestamp = last - new Date(0);
   const randomTimestamp = getRandomInteger(minTimestamp, maxTimestamp);
@@ -136,7 +140,7 @@ const generateFilm = () => {
     director: getRandomValue(directors),
     writers: generateUniqueCompilation(writers, FilmWritersCount),
     actors: generateUniqueCompilation(actors, FilmActorsCount),
-    date: generateDate(),
+    date: generateDate(FilmDate.FIRST, FilmDate.LAST),
     duration: generateDuration(),
     country: getRandomValue(countries),
     genres: generateUniqueCompilation(genres, FilmGenresCount),
@@ -150,5 +154,9 @@ const generateFilm = () => {
 };
 
 export const generateFilms = (count) => {
-  return new Array(count).fill().map(generateFilm);
+  const films = new Array(count).fill().map(generateFilm);
+  const filmsWithDates = films.map((film) =>
+    film.isWatched ? Object.assign({}, film, {watchedDate: generateDate(WatchedDate.FIRST, WatchedDate.LAST)}) : film);
+
+  return filmsWithDates;
 };

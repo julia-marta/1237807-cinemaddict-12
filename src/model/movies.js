@@ -14,6 +14,10 @@ export default class Movies extends Observer {
     return this._movies;
   }
 
+  getWatchedMovies() {
+    return this._movies.filter((movie) => movie.isWatched);
+  }
+
   updateMovie(updateType, updatedFilm) {
     const index = this._movies.findIndex((film) => film.id === updatedFilm.id);
 

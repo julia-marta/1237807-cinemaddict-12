@@ -27,7 +27,6 @@ export default class Smart extends AbstractView {
     prevElement.replaceWith(newElement);
     prevElement = null;
     this.restoreHandlers();
-    this.restoreComments();
   }
 
   restoreHandlers() {

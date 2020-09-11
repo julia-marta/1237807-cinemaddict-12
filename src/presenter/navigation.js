@@ -59,7 +59,7 @@ export default class Navigation {
       case MOVIES:
         if (menuItem === STATS) {
           this._movieListPresenter.destroy();
-          this._statisticsComponent = new StatisticsView();
+          this._statisticsComponent = new StatisticsView(this._moviesModel.getWatchedMovies());
           render(this._navigationContainer, this._statisticsComponent);
           this.init();
           this._navigationMode = STATISTICS;
