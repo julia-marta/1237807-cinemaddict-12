@@ -5,17 +5,18 @@ import {render, replace, remove} from "../utils/render.js";
 import {Mode, UserAction, UpdateType} from "../const.js";
 
 const {DEFAULT, POPUP} = Mode;
-const {UPDATE, ADD, DELETE} = UserAction;
+const {UPDATE, ADD} = UserAction;
 const {PATCH, MINOR} = UpdateType;
 
 const body = document.querySelector(`body`);
 
 
 export default class Film {
-  constructor(filmContainer, changeFilm, changeMode, commentsModel) {
+  constructor(filmContainer, changeFilm, changeComment, changeMode, commentsModel) {
     this._filmContainer = filmContainer;
     this._popUpContainer = body;
     this._changeFilm = changeFilm;
+    this._changeComment = changeComment;
     this._changeMode = changeMode;
     this._commentsModel = commentsModel;
 
@@ -23,7 +24,6 @@ export default class Film {
     this._popUpComponent = null;
     this._mode = DEFAULT;
 
-    this._handleModelCommentsUpdate = this._handleModelCommentsUpdate.bind(this);
     this._handlePopUpCommentsRender = this._handlePopUpCommentsRender.bind(this);
     this._handleShortcutKeysDown = this._handleShortcutKeysDown.bind(this);
     this._handleFilmDetailsClick = this._handleFilmDetailsClick.bind(this);
@@ -31,8 +31,6 @@ export default class Film {
     this._handleToggleChange = this._handleToggleChange.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-
-    this._commentsModel.addObserver(this._handleModelCommentsUpdate);
   }
 
   init(film) {
@@ -105,31 +103,16 @@ export default class Film {
     this._changeFilm(UPDATE, MINOR, this._film);
   }
 
-  _handleModelCommentsUpdate(updateType, updatedComment, filmID) {
-    if (this._film.id === filmID) {
-      switch (updateType) {
-        case ADD:
-          this._film.comments = Array.from(new Set([...this._film.comments, updatedComment]));
-          break;
-        case DELETE:
-          this._film.comments = this._film.comments.filter((comment) => comment.id !== updatedComment.id);
-          break;
-      }
-
-      this._changeFilm(UPDATE, PATCH, this._film);
-    }
-  }
-
   _handlePopUpCommentsRender(container) {
     const comments = this._commentsModel.getComments()[this._film.id];
-    const commentPresenter = new CommentPresenter(container, this._film.id, this._changeFilm);
+    const commentPresenter = new CommentPresenter(container, this._film.id, this._changeComment);
     comments.forEach((comment) => commentPresenter.init(comment));
   }
 
   _handleShortcutKeysDown(container, newComment) {
-    const newCommentPresenter = new CommentPresenter(container, this._film.id, this._changeFilm);
+    const newCommentPresenter = new CommentPresenter(container, this._film.id, this._changeComment);
     newCommentPresenter.init(newComment);
-    this._changeFilm(ADD, ADD, newComment, this._film.id);
+    this._changeComment(ADD, newComment, this._film.id);
     this._popUpComponent.reset(this._film);
   }
 

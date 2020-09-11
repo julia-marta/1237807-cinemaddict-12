@@ -162,7 +162,7 @@ export default class PopUp extends SmartView {
 
     this._comment = {
       id: generateID(),
-      emoji: `./images/emoji/${this._emoji.emojiName}.png`,
+      emoji: this._emoji.emojiName,
       text: this._newComment.text,
       author: generateRandomName(),
       day: new Date()
@@ -181,7 +181,7 @@ export default class PopUp extends SmartView {
         this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatchList: evt.target.checked}));
         break;
       case `watched`:
-        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatched: evt.target.checked}));
+        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatched: evt.target.checked, watchedDate: new Date()}));
         break;
       case `favorite`:
         this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isFavorites: evt.target.checked}));

@@ -1,18 +1,18 @@
 import AbstractView from "./abstract.js";
 
-const createTotalMarkup = (total) => {
+const createTotalMarkup = (films) => {
   return (
-    `<p>${total} movies inside</p>`
+    `<p>${films.length} movies inside</p>`
   );
 };
 
 export default class Total extends AbstractView {
-  constructor(total) {
+  constructor(films) {
     super();
-    this._total = total;
+    this._films = films;
   }
 
   getTemplate() {
-    return createTotalMarkup(this._total);
+    return createTotalMarkup(this._films);
   }
 }

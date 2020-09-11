@@ -47,17 +47,28 @@ export default class MovieList {
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleCommentsViewAction = this._handleCommentsViewAction.bind(this);
+    this._handleCommentsModelEvent = this._handleCommentsModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleShowButtonClick = this._handleShowButtonClick.bind(this);
-
-    this._moviesModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     render(this._movieListContainer, this._movieListComponent);
     this._renderMovieList();
+
+    this._moviesModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleCommentsModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+  }
+
+  destroy() {
+    this._clearMovieList({resetRenderedFilmsCount: true, resetSortType: true});
+    remove(this._movieListComponent);
+    this._moviesModel.removeObserver(this._handleModelEvent);
+    this._commentsModel.removeObserver(this._handleCommentsModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {
@@ -95,10 +106,10 @@ export default class MovieList {
         this._moviesModel.updateMovie(updateType, updatedData);
         break;
       case ADD:
-        this._commentsModel.addComment(updateType, updatedData, filmID);
+        this._moviesModel.addComment(updateType, updatedData, filmID);
         break;
       case DELETE:
-        this._commentsModel.deleteComment(updateType, updatedData, filmID);
+        this._moviesModel.deleteComment(updateType, updatedData, filmID);
         break;
     }
   }
@@ -127,6 +138,21 @@ export default class MovieList {
     }
   }
 
+  _handleCommentsViewAction(actionType, updatedData, filmID) {
+    switch (actionType) {
+      case ADD:
+        this._commentsModel.addComment(actionType, updatedData, filmID);
+        break;
+      case DELETE:
+        this._commentsModel.deleteComment(actionType, updatedData, filmID);
+        break;
+    }
+  }
+
+  _handleCommentsModelEvent(actionType, updatedComment, filmID) {
+    this._handleViewAction(actionType, PATCH, updatedComment, filmID);
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -149,7 +175,7 @@ export default class MovieList {
   }
 
   _renderFilmCard(container, film, type) {
-    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange, this._commentsModel);
+    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleCommentsViewAction, this._handleModeChange, this._commentsModel);
     filmPresenter.init(film);
     switch (type) {
       case ALL:
