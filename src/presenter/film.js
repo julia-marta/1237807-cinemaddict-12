@@ -33,11 +33,12 @@ export default class Film {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  init(film) {
+  init(film, comments) {
     this._film = film;
     this._emoji = null;
     this._newComment = null;
     this._isPopUpReOpened = false;
+    this._comments = comments;
 
     const prevFilmCardComponent = this._filmCardComponent;
     const prevPopUpComponent = this._popUpComponent;
@@ -104,9 +105,8 @@ export default class Film {
   }
 
   _handlePopUpCommentsRender(container) {
-    const comments = this._commentsModel.getComments()[this._film.id];
     const commentPresenter = new CommentPresenter(container, this._film.id, this._changeComment);
-    comments.forEach((comment) => commentPresenter.init(comment));
+    this._comments.forEach((comment) => commentPresenter.init(comment));
   }
 
   _handleShortcutKeysDown(container, newComment) {

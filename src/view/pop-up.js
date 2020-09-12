@@ -85,7 +85,7 @@ const createPopUpMarkup = (data) => {
                 </div>
               </div>
               ${filmDetailsMarkup}
-              <p class="film-details__film-description">${description.join(`. `)}.</p>
+              <p class="film-details__film-description">${description}.</p>
             </div>
           </div>
           <section class="film-details__controls">

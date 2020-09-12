@@ -6,26 +6,22 @@ import MoviesModel from "./model/movies.js";
 import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/render.js";
-import {generateFilms} from "./mock/film.js";
+import {UpdateType} from "./const.js"
+import Api from "./api.js";
 
-const FILM_CARDS_COUNT = 20;
-
-const films = generateFilms(FILM_CARDS_COUNT);
-
-
-
-
-// console.log(getTotalDuration(films));
-
-const moviesModel = new MoviesModel();
-moviesModel.setMovies(films);
-const commentsModel = new CommentsModel();
-commentsModel.setComments(films);
-const filterModel = new FilterModel();
+const {INIT} = UpdateType;
+const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
+const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
+
+const api = new Api(SERVER_NAME, AUTHORIZATION);
+
+const moviesModel = new MoviesModel();
+const commentsModel = new CommentsModel();
+const filterModel = new FilterModel();
 
 const profilePresenter = new ProfilePresenter(header, moviesModel);
 const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel);
@@ -35,3 +31,42 @@ profilePresenter.init();
 movieListPresenter.init();
 navigationPresenter.init();
 render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+
+api.getMovies()
+  .then((movies) => {
+    moviesModel.setMovies(INIT, movies);
+    return movies;
+  })
+  .then((movies) => {
+    const allComments = {};
+    movies.forEach((film) =>
+      api.getComments(film.id).then((comments) => {
+        allComments[film.id] = comments;
+    }))
+    return allComments;
+  })
+  .then((comments) => {
+    console.log(comments);
+    commentsModel.setComments(comments);
+  })
+
+//   .catch(() => {
+//     moviesModel.setMovies(INIT, []);
+//   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
