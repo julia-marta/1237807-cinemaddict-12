@@ -3,11 +3,12 @@ import Observer from "../utils/observer.js";
 export default class Comments extends Observer {
   constructor() {
     super();
-    this._comments = {};
+    this._comments = []
   }
 
   setComments(comments) {
     this._comments = comments;
+    console.log(`тут загрузили комменты ${this._comments}`)
     // this._comments = films.slice().reduce((comments, film) => {
     //   comments[film.id] = film.comments;
     //   return comments;
@@ -15,7 +16,7 @@ export default class Comments extends Observer {
   }
 
   getComments() {
-    console.log(this._comments)
+    console.log(`тут получили комменты ${this._comments}`)
     return this._comments;
   }
 

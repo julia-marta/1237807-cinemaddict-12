@@ -32,23 +32,28 @@ movieListPresenter.init();
 navigationPresenter.init();
 render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
 
+
+
 api.getMovies()
   .then((movies) => {
     moviesModel.setMovies(INIT, movies);
     return movies;
   })
-  .then((movies) => {
-    const allComments = {};
-    movies.forEach((film) =>
-      api.getComments(film.id).then((comments) => {
-        allComments[film.id] = comments;
-    }))
-    return allComments;
-  })
-  .then((comments) => {
-    console.log(comments);
-    commentsModel.setComments(comments);
-  })
+
+  .then((movies) => movies.map((film) => api.getComments(film.id)))
+  .then((comments) => Promise.all(comments))
+  .then((allcomments) => commentsModel.setComments(allcomments))
+
+
+  // {
+  //       allComments[film.id] = comments;
+  //   }))
+  //   return allComments;
+  // })
+  // .then((comments) => {
+  //   console.log(comments);
+  //   ;
+  // })
 
 //   .catch(() => {
 //     moviesModel.setMovies(INIT, []);

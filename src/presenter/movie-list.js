@@ -63,7 +63,7 @@ export default class MovieList {
     render(this._movieListContainer, this._movieListComponent);
     this._renderMovieList();
     this._comments = this._commentsModel.getComments();
-    console.log(this._comments)
+    console.log(`попробуем тут комменты получить ${this._comments}`)
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._commentsModel.addObserver(this._handleCommentsModelEvent);
@@ -163,7 +163,6 @@ export default class MovieList {
   }
 
   _handleCommentsModelEvent(actionType, updatedComment, filmID) {
-    
     this._handleViewAction(actionType, PATCH, updatedComment, filmID);
   }
 
@@ -190,9 +189,8 @@ export default class MovieList {
 
   _renderFilmCard(container, film, type) {
     const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleCommentsViewAction, this._handleModeChange, this._commentsModel);
-    const comments = this._comments[film.id];
-   
-    filmPresenter.init(film, comments);
+
+    filmPresenter.init(film);
     
 
     switch (type) {

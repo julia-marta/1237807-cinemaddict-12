@@ -7,11 +7,13 @@ export default class Movies extends Observer {
   }
 
   setMovies(updateType, movies) {
+    console.log(`тут загрузили фильмы`)
     this._movies = movies.slice();
     this._notify(updateType);
   }
 
   getMovies() {
+    console.log(`тут получили фильмы`)
     return this._movies;
   }
 
