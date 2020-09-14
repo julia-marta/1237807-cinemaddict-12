@@ -93,7 +93,7 @@ const createStatisticsMarkup = (data) => {
   const rank = films.length !== 0 ? getRank(films.length) : ``;
   const filmsInRange = films.length !== 0 ? getFilmsInRange(films, currentRange) : [];
   const totalDuration = filmsInRange.length !== 0 ? getTotalDuration(filmsInRange) : 0;
-  const totalHours = totalDuration !== 0 ? moment.duration(totalDuration, `minutes`).hours() : 0;
+  const totalHours = totalDuration !== 0 ? Math.floor(moment.duration(totalDuration, `minutes`).asHours()) : 0;
   const totalMinutes = totalDuration !== 0 ? moment.duration(totalDuration, `minutes`).minutes() : 0;
   const genresCount = filmsInRange.length !== 0 ? getGenresCount(filmsInRange) : 0;
   const topGenre = genresCount !== 0 ? getTopGenre(genresCount) : ``;

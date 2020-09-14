@@ -85,7 +85,7 @@ const createPopUpMarkup = (data) => {
                 </div>
               </div>
               ${filmDetailsMarkup}
-              <p class="film-details__film-description">${description.join(`. `)}.</p>
+              <p class="film-details__film-description">${description}.</p>
             </div>
           </div>
           <section class="film-details__controls">
@@ -137,12 +137,13 @@ export default class PopUp extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._restoreComments();
     this.setCloseButtonClickHandler(this._callback.closeButtonClick);
     this.setControlsToggleHandler(this._callback.controlsToggle);
     this.setSubmitCommentHandler(this._callback.submitComment);
   }
 
-  restoreComments() {
+  _restoreComments() {
     const newCommentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
     this._renderComments(newCommentsContainer);
   }
