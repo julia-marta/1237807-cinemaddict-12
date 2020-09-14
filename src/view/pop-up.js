@@ -137,12 +137,13 @@ export default class PopUp extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    this._restoreComments();
     this.setCloseButtonClickHandler(this._callback.closeButtonClick);
     this.setControlsToggleHandler(this._callback.controlsToggle);
     this.setSubmitCommentHandler(this._callback.submitComment);
   }
 
-  restoreComments() {
+  _restoreComments() {
     const newCommentsContainer = this.getElement().querySelector(`.film-details__comments-list`);
     this._renderComments(newCommentsContainer);
   }

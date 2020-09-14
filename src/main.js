@@ -6,10 +6,9 @@ import MoviesModel from "./model/movies.js";
 import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/render.js";
-import {UpdateType, UserAction} from "./const.js"
+import {UpdateType} from "./const.js"
 import Api from "./api.js";
 
-const {UPDATE} = UserAction;
 const {INIT} = UpdateType;
 const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
 const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
@@ -25,40 +24,32 @@ const commentsModel = new CommentsModel();
 const filterModel = new FilterModel();
 
 const profilePresenter = new ProfilePresenter(header, moviesModel);
-const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel);
+const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel, api);
 const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
-profilePresenter.init();
 movieListPresenter.init();
 navigationPresenter.init();
-render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
 
-
-
-api.getMovies()
+  let films=[];
+  api.getMovies()
   .then((movies) => {
-    moviesModel.setMovies(INIT, movies);
+    films = movies
     return movies;
   })
-
   .then((movies) => movies.map((film) => api.getComments(film.id)))
   .then((comments) => Promise.all(comments))
-  .then((allcomments) => commentsModel.setComments(INIT, allcomments))
-
-
-  // {
-  //       allComments[film.id] = comments;
-  //   }))
-  //   return allComments;
-  // })
-  // .then((comments) => {
-  //   console.log(comments);
-  //   ;
-  // })
-
-//   .catch(() => {
-//     moviesModel.setMovies(INIT, []);
-//   });
+  .then((allcomments) => {
+    commentsModel.setComments(allcomments);
+    moviesModel.setMovies(INIT, films);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  })
+  .catch(() => {
+    commentsModel.setComments([]);
+    moviesModel.setMovies(INIT, []);
+    profilePresenter.init();
+    render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
+  });
 
 
 

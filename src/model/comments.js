@@ -3,19 +3,15 @@ import Observer from "../utils/observer.js";
 export default class Comments extends Observer {
   constructor() {
     super();
-    this._comments = []
+    this._comments = [];
   }
 
-  setComments(actionType, comments) {
+  setComments(comments) {
     this._comments = comments;
-    console.log(`тут загрузили комменты ${this._comments}`)
-    this._notify(actionType);
   }
 
   getComments() {
-    console.log(`тут получили комменты ${this._comments}`)
     return this._comments;
-    
   }
 
   addComment(actionType, newComment, filmID) {
@@ -37,38 +33,38 @@ export default class Comments extends Observer {
   static adaptToClient(comment) {
 
     const adaptedComment = Object.assign(
-      {},
-      comment,
-      {
-        emoji: comment.emotion,
-        text: comment.comment,
-        day: new Date(comment.date)
-      }
-  );
+        {},
+        comment,
+        {
+          emoji: comment.emotion,
+          text: comment.comment,
+          day: new Date(comment.date)
+        }
+    );
 
-  delete adaptedComment.emotion;
-  delete adaptedComment.comment;
-  delete adaptedComment.date;
+    delete adaptedComment.emotion;
+    delete adaptedComment.comment;
+    delete adaptedComment.date;
 
-  return adaptedComment;
+    return adaptedComment;
   }
 
   static adaptToServer(comment) {
 
     const adaptedComment = Object.assign(
-      {},
-      comment,
-      {
-        "emotion": comment.emoji,
-        "comment": comment.text,
-        "date": comment.day.toISOString()
-      }
-  );
+        {},
+        comment,
+        {
+          "emotion": comment.emoji,
+          "comment": comment.text,
+          "date": comment.day.toISOString()
+        }
+    );
 
-  delete adaptedComment.emoji;
-  delete adaptedComment.text;
-  delete adaptedComment.day;
+    delete adaptedComment.emoji;
+    delete adaptedComment.text;
+    delete adaptedComment.day;
 
-  return adaptedComment;
+    return adaptedComment;
   }
 }

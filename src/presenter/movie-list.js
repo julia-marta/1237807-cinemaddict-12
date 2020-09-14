@@ -23,7 +23,7 @@ const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel, commentsModel, filterModel) {
+  constructor(movieListContainer, moviesModel, commentsModel, filterModel, api) {
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -34,7 +34,7 @@ export default class MovieList {
     this._ratedFilmPresenter = {};
     this._commentedFilmPresenter = {};
     this._isLoading = true;
-    
+    this._api = api;
 
     this._sortingComponent = null;
     this._showButtonComponent = null;
@@ -62,8 +62,6 @@ export default class MovieList {
   init() {
     render(this._movieListContainer, this._movieListComponent);
     this._renderMovieList();
-    this._comments = this._commentsModel.getComments();
-    console.log(`попробуем тут комменты получить ${this._comments}`)
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._commentsModel.addObserver(this._handleCommentsModelEvent);
@@ -111,7 +109,9 @@ export default class MovieList {
   _handleViewAction(actionType, updateType, updatedData, filmID) {
     switch (actionType) {
       case UPDATE:
-        this._moviesModel.updateMovie(updateType, updatedData);
+        this._api.updateMovie(updatedData).then((response) => {
+          this._moviesModel.updateMovie(updateType, response);
+        });
         break;
       case ADD:
         this._moviesModel.addComment(updateType, updatedData, filmID);
@@ -163,18 +163,7 @@ export default class MovieList {
   }
 
   _handleCommentsModelEvent(actionType, updatedComment, filmID) {
-    switch (actionType) {
-      case ADD:
-          this._handleViewAction(actionType, PATCH, updatedComment, filmID);
-        break;
-      case DELETE:
-          this._handleViewAction(actionType, PATCH, updatedComment, filmID);
-        break;
-       case INIT:
-        this._handleModelEvent(actionType)
-        break;
-    }
-    
+    this._handleViewAction(actionType, PATCH, updatedComment, filmID);
   }
 
   _handleSortTypeChange(sortType) {
@@ -202,7 +191,6 @@ export default class MovieList {
     const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleCommentsViewAction, this._handleModeChange, this._commentsModel);
 
     filmPresenter.init(film);
-    
 
     switch (type) {
       case ALL:

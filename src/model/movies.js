@@ -7,13 +7,11 @@ export default class Movies extends Observer {
   }
 
   setMovies(updateType, movies) {
-    console.log(`тут загрузили фильмы`)
     this._movies = movies.slice();
     this._notify(updateType);
   }
 
   getMovies() {
-    console.log(`тут получили фильмы`)
     return this._movies;
   }
 
@@ -38,8 +36,7 @@ export default class Movies extends Observer {
     if (index === -1) {
       throw new Error(`Can't add comment to unexisting film`);
     }
-
-    this._movies[index].comments = [...this._movies[index].comments, newComment];
+    this._movies[index].comments = [...this._movies[index].comments, `${newComment.id}`];
     this.updateMovie(updateType, this._movies[index]);
   }
 
@@ -50,40 +47,39 @@ export default class Movies extends Observer {
       throw new Error(`Can't delete comment to unexisting film`);
     }
 
-    this._movies[index].comments = this._movies[index].comments.filter((comment) => comment.id !== deletedComment.id);
+    this._movies[index].comments = this._movies[index].comments.filter((comment) => comment !== deletedComment.id);
     this.updateMovie(updateType, this._movies[index]);
   }
 
   static adaptToClient(film) {
-    const {film_info, user_details} = film;
     const adaptedFilm = Object.assign(
-      {},
-      film,
-      {
-        poster: film_info.poster,
-        title: film_info.title,
-        originalTitle: film_info.alternative_title,
-        rating: film_info.total_rating,
-        director: film_info.director,
-        writers: film_info.writers,
-        actors: film_info.actors,
-        date: new Date(film_info.release.date),
-        duration: film_info.runtime,
-        country: film_info.release.release_country,
-        genres: film_info.genre,
-        description: film_info.description,
-        age: film_info.age_rating,
-        isWatchList: user_details.watchlist,
-        isWatched: user_details.already_watched,
-        isFavorites: user_details.favorite,
-        watchedDate: user_details.watching_date !== null ? new Date(user_details.watching_date) : user_details.watching_date,
-      }
-  );
+        {},
+        film,
+        {
+          poster: film.film_info.poster,
+          title: film.film_info.title,
+          originalTitle: film.film_info.alternative_title,
+          rating: film.film_info.total_rating,
+          director: film.film_info.director,
+          writers: film.film_info.writers,
+          actors: film.film_info.actors,
+          date: new Date(film.film_info.release.date),
+          duration: film.film_info.runtime,
+          country: film.film_info.release.release_country,
+          genres: film.film_info.genre,
+          description: film.film_info.description,
+          age: film.film_info.age_rating,
+          isWatchList: film.user_details.watchlist,
+          isWatched: film.user_details.already_watched,
+          isFavorites: film.user_details.favorite,
+          watchedDate: film.user_details.watching_date !== null ? new Date(film.user_details.watching_date) : film.user_details.watching_date,
+        }
+    );
 
-  delete adaptedFilm.film_info;
-  delete adaptedFilm.user_details;
+    delete adaptedFilm.film_info;
+    delete adaptedFilm.user_details;
 
-  return adaptedFilm;
+    return adaptedFilm;
   }
 
   static adaptToServer(film) {
