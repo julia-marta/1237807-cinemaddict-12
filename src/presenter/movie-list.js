@@ -163,7 +163,18 @@ export default class MovieList {
   }
 
   _handleCommentsModelEvent(actionType, updatedComment, filmID) {
-    this._handleViewAction(actionType, PATCH, updatedComment, filmID);
+    switch (actionType) {
+      case ADD:
+          this._handleViewAction(actionType, PATCH, updatedComment, filmID);
+        break;
+      case DELETE:
+          this._handleViewAction(actionType, PATCH, updatedComment, filmID);
+        break;
+       case INIT:
+        this._handleModelEvent(actionType)
+        break;
+    }
+    
   }
 
   _handleSortTypeChange(sortType) {

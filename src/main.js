@@ -6,9 +6,10 @@ import MoviesModel from "./model/movies.js";
 import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/render.js";
-import {UpdateType} from "./const.js"
+import {UpdateType, UserAction} from "./const.js"
 import Api from "./api.js";
 
+const {UPDATE} = UserAction;
 const {INIT} = UpdateType;
 const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
 const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
@@ -42,7 +43,7 @@ api.getMovies()
 
   .then((movies) => movies.map((film) => api.getComments(film.id)))
   .then((comments) => Promise.all(comments))
-  .then((allcomments) => commentsModel.setComments(allcomments))
+  .then((allcomments) => commentsModel.setComments(INIT, allcomments))
 
 
   // {
