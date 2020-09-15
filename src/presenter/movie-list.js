@@ -53,7 +53,7 @@ export default class MovieList {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleCommentsViewAction = this._handleCommentsViewAction.bind(this);
-    this._handleCommentsModelEvent = this._handleCommentsModelEvent.bind(this);
+    // this._handleCommentsModelEvent = this._handleCommentsModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleShowButtonClick = this._handleShowButtonClick.bind(this);
@@ -64,7 +64,7 @@ export default class MovieList {
     this._renderMovieList();
 
     this._moviesModel.addObserver(this._handleModelEvent);
-    this._commentsModel.addObserver(this._handleCommentsModelEvent);
+    // this._commentsModel.addObserver(this._handleCommentsModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
@@ -72,7 +72,7 @@ export default class MovieList {
     this._clearMovieList({resetRenderedFilmsCount: true, resetSortType: true});
     remove(this._movieListComponent);
     this._moviesModel.removeObserver(this._handleModelEvent);
-    this._commentsModel.removeObserver(this._handleCommentsModelEvent);
+    // this._commentsModel.removeObserver(this._handleCommentsModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);
   }
 
@@ -113,12 +113,30 @@ export default class MovieList {
           this._moviesModel.updateMovie(updateType, response);
         });
         break;
-      case ADD:
-        this._moviesModel.addComment(updateType, updatedData, filmID);
-        break;
-      case DELETE:
-        this._moviesModel.deleteComment(updateType, updatedData, filmID);
-        break;
+      // case ADD:
+      //     if (this._allFilmPresenter[filmID]) {
+      //       this._allFilmPresenter[filmID].setSaving();
+      //     }
+      //     if (this._ratedFilmPresenter[filmID]) {
+      //       this._ratedFilmPresenter[filmID].setSaving();
+      //     }
+      //     if (this._commentedFilmPresenter[filmID]) {
+      //       this._commentedFilmPresenter[filmID].setSaving();
+      //     }
+      //   this._moviesModel.addComment(updateType, updatedData, filmID);
+      //   break;
+      // case DELETE:
+      //     if (this._allFilmPresenter[filmID]) {
+      //       this._allFilmPresenter[filmID].setDeleting(updatedData.id);
+      //     }
+      //     if (this._ratedFilmPresenter[filmID]) {
+      //       this._ratedFilmPresenter[filmID].setDeleting(updatedData.id);
+      //     }
+      //     if (this._commentedFilmPresenter[filmID]) {
+      //       this._commentedFilmPresenter[filmID].setDeleting(updatedData.id);
+      //     }
+      //   this._moviesModel.deleteComment(updateType, updatedData, filmID);
+      //   break;
     }
   }
 
@@ -154,21 +172,63 @@ export default class MovieList {
   _handleCommentsViewAction(actionType, updatedData, filmID) {
     switch (actionType) {
       case ADD:
+          if (this._allFilmPresenter[filmID]) {
+            this._allFilmPresenter[filmID].setSaving();
+          }
+          if (this._ratedFilmPresenter[filmID]) {
+            this._ratedFilmPresenter[filmID].setSaving();
+          }
+          if (this._commentedFilmPresenter[filmID]) {
+            this._commentedFilmPresenter[filmID].setSaving();
+          }
         this._api.addComment(updatedData, filmID).then((response) => {
-          this._commentsModel.addComment(actionType, response, filmID);
+          this._commentsModel.addComment(response, filmID);
+          this._moviesModel.addComment(PATCH, response, filmID);
+        })
+        .catch(() => {
+          if (this._allFilmPresenter[filmID]) {
+            this._allFilmPresenter[filmID].setAborting();
+          }
+          if (this._ratedFilmPresenter[filmID]) {
+            this._ratedFilmPresenter[filmID].setAborting();
+          }
+          if (this._commentedFilmPresenter[filmID]) {
+            this._commentedFilmPresenter[filmID].setAborting();
+          }
         });
         break;
       case DELETE:
+          if (this._allFilmPresenter[filmID]) {
+            this._allFilmPresenter[filmID].setCommentDeleting(updatedData.id);
+          }
+          if (this._ratedFilmPresenter[filmID]) {
+            this._ratedFilmPresenter[filmID].setCommentDeleting(updatedData.id);
+          }
+          if (this._commentedFilmPresenter[filmID]) {
+            this._commentedFilmPresenter[filmID].setCommentDeleting(updatedData.id);
+          }
         this._api.deleteComment(updatedData).then(() => {
-          this._commentsModel.deleteComment(actionType, updatedData, filmID);
+          this._commentsModel.deleteComment(updatedData, filmID);
+          this._moviesModel.deleteComment(PATCH, updatedData, filmID);
+        })
+        .catch(() => {
+          if (this._allFilmPresenter[filmID]) {
+            this._allFilmPresenter[filmID].setCommentAborting(updatedData.id);
+          }
+          if (this._ratedFilmPresenter[filmID]) {
+            this._ratedFilmPresenter[filmID].setCommentAborting(updatedData.id);
+          }
+          if (this._commentedFilmPresenter[filmID]) {
+            this._commentedFilmPresenter[filmID].setCommentAborting(updatedData.id);
+          }
         });
         break;
     }
   }
 
-  _handleCommentsModelEvent(actionType, updatedComment, filmID) {
-    this._handleViewAction(actionType, PATCH, updatedComment, filmID);
-  }
+  // _handleCommentsModelEvent(actionType, updatedComment, filmID) {
+  //   this._handleViewAction(actionType, PATCH, updatedComment, filmID);
+  // }
 
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
