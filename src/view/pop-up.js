@@ -1,6 +1,5 @@
 import SmartView from "./smart.js";
 import {formatDuration, formatDate} from "../utils/film.js";
-import {generateID, generateRandomName} from "../utils/common.js";
 import {createCommentsMarkup} from "./comments.js";
 
 const createGenresMarkup = (genres) => {
@@ -162,11 +161,9 @@ export default class PopUp extends SmartView {
     }
 
     this._comment = {
-      id: generateID(),
-      emoji: this._emoji.emojiName,
       text: this._newComment.text,
-      author: generateRandomName(),
-      day: new Date()
+      day: new Date(),
+      emoji: this._emoji.emojiName,
     };
   }
 
