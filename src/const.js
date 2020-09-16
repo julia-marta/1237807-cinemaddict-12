@@ -1,6 +1,4 @@
 export const EMOJIS = [`smile`, `sleeping`, `puke`, `angry`];
-export const RANDOM_NAMES = [`John`, `Jimmy`, `Cary`, `Alfred`];
-export const RANDOM_SURNAMES = [`Doe`, `Stewart`, `Grant`, `Hitchcock`];
 
 export const Mode = {
   DEFAULT: `DEFAULT`,
@@ -8,7 +6,6 @@ export const Mode = {
 };
 
 export const UserAction = {
-  UPDATE: `UPDATE_FILM`,
   ADD: `ADD_COMMENT`,
   DELETE: `DELETE_COMMENT`
 };

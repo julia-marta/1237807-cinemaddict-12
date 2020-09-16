@@ -1,8 +1,8 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {humanizeCommentDate} from "../utils/film.js";
 
-const createCommentMarkup = (comment) => {
-  const {emoji, text, author, day} = comment;
+const createCommentMarkup = (data) => {
+  const {emoji, text, author, day, isDeleting} = data;
   const date = humanizeCommentDate(day);
 
   return (
@@ -15,31 +15,48 @@ const createCommentMarkup = (comment) => {
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${date}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="film-details__comment-delete" ${isDeleting ? `disabled` : ``}>
+        ${isDeleting ? `Deleting…` : `Delete`}
+        </button>
       </p>
       </div>
       </li>`
   );
 };
 
-export default class Comment extends AbstractView {
+export default class Comment extends SmartView {
   constructor(comment) {
     super();
-    this._comment = comment;
+    this._data = Comment.parseCommentToData(comment);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createCommentMarkup(this._comment);
+    return createCommentMarkup(this._data);
+  }
+
+  restoreHandlers() {
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(this._comment);
+    this._callback.deleteClick(Comment.parseDataToComment(this._data));
   }
 
   setDeleteClickHandler(callback) {
     this._callback.deleteClick = callback;
     this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, this._deleteClickHandler);
+  }
+
+  static parseCommentToData(comment) {
+    return Object.assign({}, comment, {isDeleting: false});
+  }
+
+  static parseDataToComment(data) {
+    data = Object.assign({}, data);
+
+    delete data.isDeleting;
+    return data;
   }
 }

@@ -1,6 +1,5 @@
 import SmartView from "./smart.js";
 import {formatDuration, formatDate} from "../utils/film.js";
-import {generateID, generateRandomName} from "../utils/common.js";
 import {createCommentsMarkup} from "./comments.js";
 
 const createGenresMarkup = (genres) => {
@@ -57,10 +56,10 @@ const createFilmDetailsMarkup = (film) => {
 };
 
 const createPopUpMarkup = (data) => {
-  const {poster, title, originalTitle, rating, description, age, comments, isWatchList, isWatched, isFavorites, isEmoji, emojiName, text} = data;
+  const {poster, title, originalTitle, rating, description, age, comments, isWatchList, isWatched, isFavorites, isEmoji, emojiName, text, isDisabled} = data;
 
   const filmDetailsMarkup = createFilmDetailsMarkup(data);
-  const commentsMarkup = createCommentsMarkup(comments, isEmoji, emojiName, text);
+  const commentsMarkup = createCommentsMarkup(comments, isEmoji, emojiName, text, isDisabled);
 
   return (
     `<section class="film-details">
@@ -162,11 +161,9 @@ export default class PopUp extends SmartView {
     }
 
     this._comment = {
-      id: generateID(),
-      emoji: this._emoji.emojiName,
       text: this._newComment.text,
-      author: generateRandomName(),
-      day: new Date()
+      day: new Date(),
+      emoji: this._emoji.emojiName,
     };
   }
 
@@ -232,7 +229,7 @@ export default class PopUp extends SmartView {
 
 
   static parseFilmToData(film, emoji, comment) {
-    return Object.assign({}, film, emoji, comment);
+    return Object.assign({}, film, emoji, comment, {isDisabled: false});
   }
 
   static parseDataToFilm(data) {
@@ -241,6 +238,7 @@ export default class PopUp extends SmartView {
     delete data.isEmoji;
     delete data.emojiName;
     delete data.text;
+    delete data.isDisabled;
 
     return data;
   }

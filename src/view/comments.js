@@ -11,7 +11,7 @@ const createEmojiListMarkup = (emojiName) => {
     </label>`).join(``);
 };
 
-export const createCommentsMarkup = (comments, isEmoji, emojiName, text) => {
+export const createCommentsMarkup = (comments, isEmoji, emojiName, text, isDisabled) => {
 
   const emojiListMarkup = createEmojiListMarkup(emojiName);
 
@@ -28,7 +28,7 @@ export const createCommentsMarkup = (comments, isEmoji, emojiName, text) => {
     </div>
     <label class="film-details__comment-label">
       <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here"
-      name="comment">${he.encode(text)}</textarea>
+      name="comment" ${isDisabled ? `disabled` : ``}>${he.encode(text)}</textarea>
     </label>
     <div class="film-details__emoji-list">
     ${emojiListMarkup}
