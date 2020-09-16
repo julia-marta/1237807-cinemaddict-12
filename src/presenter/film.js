@@ -5,7 +5,7 @@ import {render, replace, remove} from "../utils/render.js";
 import {Mode, UserAction, UpdateType} from "../const.js";
 
 const {DEFAULT, POPUP} = Mode;
-const {UPDATE, ADD} = UserAction;
+const {ADD} = UserAction;
 const {PATCH, MINOR} = UpdateType;
 
 const body = document.querySelector(`body`);
@@ -125,14 +125,16 @@ export default class Film {
     remove(this._popUpComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = DEFAULT;
-    this._changeFilm(UPDATE, MINOR, this._film);
+    this._changeFilm(MINOR, this._film);
+    Object.values(this._commentPresenter).forEach((presenter) => presenter.destroy());
+    this._commentPresenter = {};
   }
 
   _handlePopUpCommentsRender(container) {
     const comments = this._commentsModel.getComments()[this._film.id];
     const commentPresenter = new CommentPresenter(container, this._film.id, this._changeComment);
     comments.forEach((comment) => {
-      commentPresenter.init(comment)
+      commentPresenter.init(comment);
       this._commentPresenter[comment.id] = commentPresenter;
     });
   }
@@ -145,11 +147,11 @@ export default class Film {
   }
 
   _handleControlsChange(film) {
-    this._changeFilm(UPDATE, MINOR, film);
+    this._changeFilm(MINOR, film);
   }
 
   _handleToggleChange(film) {
-    this._changeFilm(UPDATE, PATCH, film);
+    this._changeFilm(PATCH, film);
   }
 
   _handleFilmDetailsClick() {

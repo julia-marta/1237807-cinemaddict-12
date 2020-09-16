@@ -6,7 +6,6 @@ export const Mode = {
 };
 
 export const UserAction = {
-  UPDATE: `UPDATE_FILM`,
   ADD: `ADD_COMMENT`,
   DELETE: `DELETE_COMMENT`
 };

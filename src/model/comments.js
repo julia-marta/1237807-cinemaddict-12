@@ -16,7 +16,6 @@ export default class Comments extends Observer {
 
   addComment(comments, filmID) {
     this._comments[filmID] = comments;
-    // this._notify(actionType, comments, filmID);
   }
 
   deleteComment(deletedComment, filmID) {
@@ -27,7 +26,6 @@ export default class Comments extends Observer {
     }
 
     this._comments[filmID] = [...this._comments[filmID].slice(0, index), ...this._comments[filmID].slice(index + 1)];
-    // this._notify(actionType, deletedComment, filmID);
   }
 
   static adaptToClient(comment) {

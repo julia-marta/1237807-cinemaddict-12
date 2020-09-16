@@ -4,7 +4,6 @@ import {humanizeCommentDate} from "../utils/film.js";
 const createCommentMarkup = (data) => {
   const {emoji, text, author, day, isDeleting} = data;
   const date = humanizeCommentDate(day);
-  console.log(isDeleting);
 
   return (
     `<li class="film-details__comment">
@@ -37,7 +36,7 @@ export default class Comment extends SmartView {
   }
 
   restoreHandlers() {
-    this.setDeleteClickHandler();
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _deleteClickHandler(evt) {

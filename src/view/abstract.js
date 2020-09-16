@@ -27,7 +27,6 @@ export default class Abstract {
   }
 
   shake(element, callback) {
-    console.log(element);
     element.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
       element.style.animation = ``;
