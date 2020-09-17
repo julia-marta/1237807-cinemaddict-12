@@ -51,19 +51,12 @@ navigationPresenter.init();
     render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
   });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  window.addEventListener(`load`, () => {
+    navigator.serviceWorker.register(`../sw.js`)
+      .then(() => {
+        console.log(`ServiceWorker available`);
+      }).catch(() => {
+        console.error(`ServiceWorker isn't available`);
+      });
+  });
 
