@@ -22,7 +22,7 @@ const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel, commentsModel, filterModel, api) {
+  constructor(movieListContainer, moviesModel, commentsModel, filterModel, apiWithProvider, api) {
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -33,6 +33,7 @@ export default class MovieList {
     this._ratedFilmPresenter = {};
     this._commentedFilmPresenter = {};
     this._isLoading = true;
+    this._apiWithProvider = apiWithProvider;
     this._api = api;
 
     this._sortingComponent = null;
@@ -103,7 +104,7 @@ export default class MovieList {
   }
 
   _handleViewAction(updateType, updatedData, isPopUp) {
-    this._api.updateMovie(updatedData).then((response) => {
+    this._apiWithProvider.updateMovie(updatedData).then((response) => {
       this._moviesModel.updateMovie(updateType, response);
     })
     .catch(() => {
