@@ -7,31 +7,38 @@ import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/render.js";
 import {UpdateType} from "./const.js"
-import Api from "./api.js";
+import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 
 const {INIT} = UpdateType;
 const AUTHORIZATION = `Basic JMhmdCQVOVrLZrMXn`;
 const SERVER_NAME = `https://12.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaddict-localstorage`;
+const STORE_VERSION = `v12`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
 
 const header = document.querySelector(`.header`);
 const main = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
 const api = new Api(SERVER_NAME, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const moviesModel = new MoviesModel();
 const commentsModel = new CommentsModel();
 const filterModel = new FilterModel();
 
 const profilePresenter = new ProfilePresenter(header, moviesModel);
-const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel, api);
+const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel, apiWithProvider, api);
 const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
 movieListPresenter.init();
 navigationPresenter.init();
 
   let films=[];
-  api.getMovies()
+  apiWithProvider.getMovies()
   .then((movies) => {
     films = movies
     return movies;
@@ -51,19 +58,20 @@ navigationPresenter.init();
     render(footer.lastElementChild, new TotalView(moviesModel.getMovies()));
   });
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`../sw.js`)
+    .then(() => {
+      console.log(`ServiceWorker available`);
+    }).catch(() => {
+      console.error(`ServiceWorker isn't available`);
+    });
+});
 
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  apiWithProvider.sync();
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

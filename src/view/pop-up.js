@@ -176,19 +176,19 @@ export default class PopUp extends SmartView {
     evt.preventDefault();
     switch (evt.target.id) {
       case `watchlist`:
-        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatchList: evt.target.checked}));
+        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatchList: evt.target.checked}), true);
         break;
       case `watched`:
-        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatched: evt.target.checked, watchedDate: new Date()}));
+        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatched: evt.target.checked, watchedDate: new Date()}), true);
         break;
       case `favorite`:
-        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isFavorites: evt.target.checked}));
+        this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isFavorites: evt.target.checked}), true);
         break;
     }
   }
 
   _shortcutKeysDownHandler(evt) {
-    if (evt.ctrlKey || evt.metaKey && evt.key === `Enter`) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === `Enter`) {
       evt.preventDefault();
       this._createComment();
       this._callback.submitComment(this._commentsContainer, this._comment);
