@@ -31,7 +31,7 @@ const commentsModel = new CommentsModel();
 const filterModel = new FilterModel();
 
 const profilePresenter = new ProfilePresenter(header, moviesModel);
-const movieListPresenter = new MovieListPresenter(main, moviesModel, commentsModel, filterModel, apiWithProvider, api);
+const movieListPresenter = new MovieListPresenter({movieListContainer: main, moviesModel, commentsModel, filterModel, apiWithProvider, api});
 const navigationPresenter = new NavigationPresenter(main, filterModel, moviesModel, movieListPresenter);
 
 movieListPresenter.init();
@@ -59,7 +59,7 @@ navigationPresenter.init();
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`../sw.js`)
+  navigator.serviceWorker.register(`./sw.js`)
     .then(() => {
       console.log(`ServiceWorker available`);
     }).catch(() => {

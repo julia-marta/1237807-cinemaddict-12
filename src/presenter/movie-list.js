@@ -22,7 +22,7 @@ const FILM_EXTRA_COUNT = 2;
 const FILM_CARDS_PER_STEP = 5;
 
 export default class MovieList {
-  constructor(movieListContainer, moviesModel, commentsModel, filterModel, apiWithProvider, api) {
+  constructor({movieListContainer, moviesModel, commentsModel, filterModel, apiWithProvider, api} = {}) {
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
     this._filterModel = filterModel;
@@ -365,7 +365,20 @@ export default class MovieList {
     }
     this._renderSorting();
     this._renderAllMovies();
-    this._renderTopRated();
-    this._renderMostCommented();
+
+    const isAllRaitingsNull = this._getFilms().every((film) => {
+      return film.rating === 0;
+    });
+    const isAllCommentsNull = this._getFilms().every((film) => {
+      return film.comments.length === 0;
+    });
+
+    if (!isAllRaitingsNull) {
+      this._renderTopRated();
+    }
+
+    if (!isAllCommentsNull) {
+      this._renderMostCommented();
+    }
   }
 }

@@ -2,6 +2,14 @@ import SmartView from "./smart.js";
 import {formatDuration, formatDate} from "../utils/film.js";
 import {createCommentsMarkup} from "./comments.js";
 
+const Control = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};
+
+const {WATCHLIST, WATCHED, FAVORITE} = Control;
+
 const createGenresMarkup = (genres) => {
 
   const genresList = genres.map((genre) => {
@@ -175,13 +183,13 @@ export default class PopUp extends SmartView {
   _controlsToggleHandler(evt) {
     evt.preventDefault();
     switch (evt.target.id) {
-      case `watchlist`:
+      case WATCHLIST:
         this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatchList: evt.target.checked}), true);
         break;
-      case `watched`:
+      case WATCHED:
         this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isWatched: evt.target.checked, watchedDate: new Date()}), true);
         break;
-      case `favorite`:
+      case FAVORITE:
         this._callback.controlsToggle(Object.assign({}, PopUp.parseDataToFilm(this._data), {isFavorites: evt.target.checked}), true);
         break;
     }
