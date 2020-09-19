@@ -1,7 +1,7 @@
 const shuffleItems = (items) => {
   for (let i = items.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
-    let temp = items[i];
+    const temp = items[i];
     items[i] = items[j];
     items[j] = temp;
   }
@@ -10,9 +10,9 @@ const shuffleItems = (items) => {
 
 export const sortByRating = (films) => {
   const allRatings = new Set();
-  films.map((film) => allRatings.add(film.rating));
+  films.forEach((film) => allRatings.add(film.rating));
 
-  if (allRatings.length === 1) {
+  if (allRatings.size === 1) {
     return shuffleItems(films);
   }
 
@@ -23,9 +23,9 @@ export const sortByRating = (films) => {
 
 export const sortByCommentsCount = (films) => {
   const allComments = new Set();
-  films.map((film) => allComments.add(film.comments.length));
+  films.forEach((film) => allComments.add(film.comments.length));
 
-  if (allComments.length === 1) {
+  if (allComments.size === 1) {
     return shuffleItems(films);
   }
 
