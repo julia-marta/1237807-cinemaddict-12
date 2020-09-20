@@ -20,7 +20,7 @@ export const UpdateType = {
 export const NavigationMode = {
   MOVIES: `MOVIES`,
   STATISTICS: `STATISTICS`
-}
+};
 
 export const MenuItem = {
   ALL: `#all`,
@@ -28,7 +28,7 @@ export const MenuItem = {
   HISTORY: `#history`,
   FAVORITES: `#favorites`,
   STATS: `#stats`
-}
+};
 
 export const SortType = {
   DEFAULT: `default`,

@@ -1,4 +1,4 @@
-import Observer from "../utils/observer.js";
+import Observer from "./observer.js";
 import {MenuItem} from "../const.js";
 
 const {ALL} = MenuItem;

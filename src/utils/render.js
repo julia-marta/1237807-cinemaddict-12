@@ -33,14 +33,6 @@ export const render = (container, element, place = BEFOREEND, targetElement) => 
   }
 };
 
-export const renderTemplate = (container, markup, place = BEFOREEND) => {
-  if (container instanceof AbstractView) {
-    container = container.getElement();
-  }
-
-  container.insertAdjacentHTML(place, markup);
-};
-
 export const createElement = (markup) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = markup;

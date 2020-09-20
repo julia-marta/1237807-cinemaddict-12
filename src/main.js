@@ -6,8 +6,8 @@ import MoviesModel from "./model/movies.js";
 import CommentsModel from "./model/comments.js";
 import FilterModel from "./model/filter.js";
 import {render} from "./utils/render.js";
-import {UpdateType} from "./const.js"
-import Api from "./api/index.js";
+import {UpdateType} from "./const.js";
+import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
@@ -37,10 +37,10 @@ const navigationPresenter = new NavigationPresenter(main, filterModel, moviesMod
 movieListPresenter.init();
 navigationPresenter.init();
 
-  let films=[];
-  apiWithProvider.getMovies()
+let films = [];
+apiWithProvider.getMovies()
   .then((movies) => {
-    films = movies
+    films = movies;
     return movies;
   })
   .then((movies) => movies.map((film) => api.getComments(film.id)))
@@ -59,12 +59,7 @@ navigationPresenter.init();
   });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`./sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker available`);
-    }).catch(() => {
-      console.error(`ServiceWorker isn't available`);
-    });
+  navigator.serviceWorker.register(`./sw.js`);
 });
 
 window.addEventListener(`online`, () => {

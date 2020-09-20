@@ -114,7 +114,6 @@ export default class Film {
       if (isPopUp) {
         this._popUpComponent.reset(this._film);
       }
-      return;
     };
     if (isPopUp) {
       this._popUpComponent.shake(this._popUpComponent.getElement(), resetState);

@@ -7,11 +7,7 @@ export const formatDuration = (minutes) => {
 };
 
 export const formatDate = (date, isFullDate) => {
-  if (isFullDate) {
-    return moment(date).format(`DD MMMM YYYY`);
-  } else {
-    return moment(date).format(`YYYY`);
-  }
+  return isFullDate ? moment(date).format(`DD MMMM YYYY`) : moment(date).format(`YYYY`);
 };
 
 export const humanizeCommentDate = (date) => {
